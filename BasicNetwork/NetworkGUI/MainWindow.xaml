@@ -34,8 +34,8 @@
             <Viewbox Grid.Row="0" Grid.Column="0">
                 <TextBlock TextWrapping="Wrap" Text="Packet Sniffing:" />
             </Viewbox>
-            <RichTextBox Grid.Row="1" Grid.Column="0" 
-                         IsReadOnly="True" x:Name="PacketTextBox" />
+            <ListBox Grid.Row="1" Grid.Column="0" 
+                         x:Name="PacketBox" />
             <Viewbox Grid.Row="0" Grid.Column="1">
                 <TextBlock TextWrapping="Wrap" Text="Neighbours:" />
             </Viewbox>

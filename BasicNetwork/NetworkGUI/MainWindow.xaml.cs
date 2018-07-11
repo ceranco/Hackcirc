@@ -31,17 +31,7 @@ namespace NetworkGUI
 
             _packetQueue.Enqueue("Test Message");
 
-
-            PacketTextBox.AppendText("Test Message1\n");
-            PacketTextBox.SelectAll();
-            PacketTextBox.SelectionBrush = Color;
-            int firstCharOfLineIndex = PacketTextBox.();
-            int currentLine = richTextBox1.GetLineFromCharIndex(firstCharOfLineIndex);
-            this.myRichTextBox.Select(firstCharOfLineIndex, currentLine);
-            this.myRichTextBox.SelectionBackColor = Color.Aqua;
-            this.myRichTextBox.Select(0, 0);
-
-            PacketTextBox.AppendText("Test Message2\n");
+            PacketBox.
         }
     }
 }
