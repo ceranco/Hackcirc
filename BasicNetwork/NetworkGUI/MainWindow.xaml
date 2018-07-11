@@ -15,7 +15,7 @@
             <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Label Content="Node ID: "></Label>
+            <Label x:Name="IDLabel" Content="Node ID: "></Label>
             <Label Content="{Binding ID}" />
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
@@ -34,14 +34,23 @@
             <Viewbox Grid.Row="0" Grid.Column="0">
                 <TextBlock TextWrapping="Wrap" Text="Packet Sniffing:" />
             </Viewbox>
-            <ListBox Grid.Row="1" Grid.Column="0" 
-                         x:Name="PacketBox" />
+            <Border Grid.Row="1" Grid.Column="0" 
+                    BorderBrush="LightGray" BorderThickness="1">
+                <StackPanel x:Name="PacketPanel" >
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFE2E2E2" Offset="1"/>
+                            <GradientStop Color="#FFFFFFFC"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                </StackPanel>
+            </Border>
             <Viewbox Grid.Row="0" Grid.Column="1">
                 <TextBlock TextWrapping="Wrap" Text="Neighbours:" />
             </Viewbox>
             <Border Grid.Row="1" Margin="10 0 20 0" Grid.Column="1" 
                     BorderBrush="LightGray" BorderThickness="1">
-                <local:ConnectivityGraphic />
+                <local:ConnectivityGraphic x:Name="ConnectivityGraph"/>
             </Border>
         </Grid>
         <Grid Grid.Row="3" Margin="0 0 0 10">

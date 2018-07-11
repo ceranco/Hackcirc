@@ -9,9 +9,9 @@
     <Grid x:Name="MainGrid">
         <Grid.Resources>
             <Style TargetType="Ellipse">
-                <Setter Property="Fill" Value="#003366" />
+                <Setter Property="Fill" Value="Gray" />
                 <Setter Property="Width" Value="Auto" />
-                <Setter Property="Margin" Value="20" />
+                <Setter Property="Margin" Value="10" />
             </Style>
             <Style TargetType="TextBlock">
                 <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -34,28 +34,28 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.Column="1">
+            <Ellipse  x:Name="E0"/>
+            <TextBlock Text="0"/>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="2">
             <Ellipse  x:Name="E1"/>
             <TextBlock Text="1"/>
         </Grid>
-        <Grid Grid.Row="0" Grid.Column="2">
+        <Grid Grid.Row="1" Grid.Column="3">
             <Ellipse  x:Name="E2"/>
             <TextBlock Text="2"/>
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="3">
+        <Grid Grid.Row="2" Grid.Column="2">
             <Ellipse  x:Name="E3"/>
             <TextBlock Text="3"/>
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="2">
+        <Grid Grid.Row="2" Grid.Column="1">
             <Ellipse  x:Name="E4"/>
             <TextBlock Text="4"/>
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="1">
+        <Grid Grid.Row="1" Grid.Column="0">
             <Ellipse  x:Name="E5"/>
             <TextBlock Text="5"/>
-        </Grid>
-        <Grid Grid.Row="1" Grid.Column="0">
-            <Ellipse  x:Name="E6"/>
-            <TextBlock Text="6"/>
         </Grid>
 
     </Grid>
