@@ -55,7 +55,7 @@ namespace BasicNetwork
 
             _mainThread = new Thread(() => MainLoop());
             _mainThread.Start();
-
+            
             GetMyID();
 
             GetNetwork();
@@ -119,7 +119,7 @@ namespace BasicNetwork
                     // Send Message
                     _packetQueue.Enqueue(newPacket);
 
-                    Console.WriteLine("Relay Src->Dest {0->1}, OrigSrcCnt {2}",
+                    Console.WriteLine("Relay Src->Dest {0}->{1}, OrigSrcCnt {2}",
                         newPacket.NodeOriginalSource,
                         newPacket.NodeDestination,
                         newPacket.NodeOriginalSourceCount);
