@@ -224,8 +224,6 @@ namespace BasicNetwork
 
                 Thread.Sleep(50);                
             }
-
-            // _packetBagForAcknoledge
         }
 
         public void PrintNeighbours()
