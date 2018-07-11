@@ -1,0 +1,7 @@
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.csprojAssemblyReference.cache
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.csproj.CoreCompileInputs.cache
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\BasicNetwork\bin\Debug\BasicNetwork.exe.config
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\BasicNetwork\bin\Debug\BasicNetwork.exe
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\BasicNetwork\bin\Debug\BasicNetwork.pdb
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.exe
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.pdb
