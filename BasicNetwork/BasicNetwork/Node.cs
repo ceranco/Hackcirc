@@ -86,6 +86,8 @@ namespace BasicNetwork
                 NodeDestination = receivedPacket.NodeDestination,
                 Info = receivedPacket.Info,
                 NodeOriginalSourceCount = receivedPacket.NodeOriginalSourceCount,
+                IsAcknoledgment = receivedPacket.IsAcknoledgment,
+                AcknoledgmentCount = receivedPacket.AcknoledgmentCount
             };
 
             return newPacket;
@@ -273,7 +275,7 @@ namespace BasicNetwork
                 Info = info,
                 NodeSource = _id,
                 NodeOriginalSource = _id,
-                NodeDestination = 4,
+                NodeDestination = 3,
                 NodeOriginalSourceCount = timeCount
             };
 
