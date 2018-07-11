@@ -29,7 +29,7 @@ namespace BasicNetwork
         Thread _receiveThread = null;
         Thread _mainThread = null;
         int _id = 0;
-        Int64 _idCount = 0;
+        //Int64 _idCount = 0;
         List<int> _neighbourNodes = new List<int>();
         ConcurrentQueue<Packet> _packetQueue = new ConcurrentQueue<Packet>();
         Dictionary<int, Int64> _previousSeenPackets
@@ -55,7 +55,7 @@ namespace BasicNetwork
 
             _mainThread = new Thread(() => MainLoop());
             _mainThread.Start();
-            
+
             GetMyID();
 
             GetNetwork();
@@ -65,7 +65,7 @@ namespace BasicNetwork
 
         public void SendBroadcast(Packet p)
         {
-            for (int i = 0; i < _broadcast.Count; i ++)
+            for (int i = 0; i < _broadcast.Count; i++)
             {
                 if (_id == i) continue;
                 byte[] data = p.GetBytes();
@@ -78,7 +78,7 @@ namespace BasicNetwork
             while (true)
             {
                 byte[] bytes = _udpReceive.Receive(ref _receiveEndPoint);
-                Packet receivedPacket = new Packet(bytes);                
+                Packet receivedPacket = new Packet(bytes);
 
                 // Do not Process Packets if they are not coming from 
                 // Physical Neighbours
@@ -89,7 +89,7 @@ namespace BasicNetwork
 
                 // Do not Process packets when they already exists 
                 // In previous seen packets
-                if (_previousSeenPackets[receivedPacket.NodeOriginalSource] >= 
+                if (_previousSeenPackets[receivedPacket.NodeOriginalSource] >=
                     receivedPacket.NodeOriginalSourceCount)
                 {
                     continue;
@@ -167,15 +167,16 @@ namespace BasicNetwork
             var neighbours = File.ReadAllLines("NB.txt");
             foreach (string n in neighbours)
             {
-                _neighbourNodes.Add(int.Parse(n));                
+                _neighbourNodes.Add(int.Parse(n));
             }
         }
 
         public void Foo(int info)
         {
             if (_id != 1) return;
-            
-            _idCount++;
+
+            // Time since 1970, in order 
+            var idCount = DateTime.Now.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
 
             Packet p = new Packet()
             {
@@ -183,11 +184,11 @@ namespace BasicNetwork
                 NodeSource = _id,
                 NodeOriginalSource = _id,
                 NodeDestination = 4,
-                NodeOriginalSourceCount = _idCount
+                NodeOriginalSourceCount = idCount
             };
 
             // Add myself to seenMessages
-            _previousSeenPackets[_id] = _idCount;
+            _previousSeenPackets[_id] = idCount;
 
             // Send Packet
             SendBroadcast(p);
