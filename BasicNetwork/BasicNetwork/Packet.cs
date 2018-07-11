@@ -11,8 +11,7 @@ namespace BasicNetwork
         #region Properties
         public int NodeOriginalSource { get; set; }
         public int NodeSource { get; set; }
-        public Int64 NodeSourceCount { get; set; }
-        public int NodeNextHop { get; set; }
+        public Int64 NodeOriginalSourceCount { get; set; }
         public int NodeDestination { get; set; }
         public int Info { get; set; }
         #endregion
@@ -24,9 +23,7 @@ namespace BasicNetwork
             index += sizeof(int);
             NodeSource = BitConverter.ToInt32(data, index);
             index += sizeof(int);
-            NodeSourceCount = BitConverter.ToInt32(data, index);
-            index += sizeof(int);
-            NodeNextHop = BitConverter.ToInt32(data, index);
+            NodeOriginalSourceCount = BitConverter.ToInt32(data, index);
             index += sizeof(int);
             NodeDestination = BitConverter.ToInt32(data, index);
             index += sizeof(int);
@@ -39,8 +36,8 @@ namespace BasicNetwork
 
         public void PrintDebugInfo()
         {
-            Console.WriteLine("NodeOriginalSource {0}, NodeSource {1}, NodeSourceCount {2}, NodeNextHop {3}, NodeDestination {4}, Info {5}",
-                NodeOriginalSource, NodeSource, NodeSourceCount, NodeNextHop, NodeDestination, Info);
+            Console.WriteLine("NodeOriginalSource {0}, NodeSource {1}, NodeOriginalSourceCount {2},NodeDestination {3}, Info {4}",
+                NodeOriginalSource, NodeSource, NodeOriginalSourceCount, NodeDestination, Info);
         }
 
         public byte[] GetBytes()
@@ -49,8 +46,7 @@ namespace BasicNetwork
 
             result = result.Concat(BitConverter.GetBytes(NodeOriginalSource));
             result = result.Concat(BitConverter.GetBytes(NodeSource));
-            result = result.Concat(BitConverter.GetBytes(NodeSourceCount));
-            result = result.Concat(BitConverter.GetBytes(NodeNextHop));
+            result = result.Concat(BitConverter.GetBytes(NodeOriginalSourceCount));
             result = result.Concat(BitConverter.GetBytes(NodeDestination));
             result = result.Concat(BitConverter.GetBytes(Info));
 

@@ -35,6 +35,9 @@ namespace BasicNetwork
         NetworkGraph _networkGraph = new NetworkGraph(kNumNodes);
         ConcurrentQueue<Packet> _packetQueue = new ConcurrentQueue<Packet>();
 
+        Dictionary<int, Int64> _previousSeenPackets
+            = new Dictionary<int, Int64>();
+
         #endregion
 
         public Node()
@@ -44,6 +47,12 @@ namespace BasicNetwork
             _broadcast.Add(2, new IPEndPoint(IPAddress.Parse("1.1.0.35"), kBroadcastPort));
             _broadcast.Add(3, new IPEndPoint(IPAddress.Parse("1.1.0.37"), kBroadcastPort));
             _broadcast.Add(4, new IPEndPoint(IPAddress.Parse("1.1.0.64"), kBroadcastPort));
+
+            _previousSeenPackets.Add(0, 0);
+            _previousSeenPackets.Add(1, 0);
+            _previousSeenPackets.Add(2, 0);
+            _previousSeenPackets.Add(3, 0);
+            _previousSeenPackets.Add(4, 0);
 
             _receiveThread = new Thread(() => Receive());
             _receiveThread.Start();
@@ -62,10 +71,11 @@ namespace BasicNetwork
 
         public void SendBroadcast(Packet p)
         {
-            foreach (IPEndPoint ipep in _broadcast.Values)
+            for (int i = 0; i < _broadcast.Count; i ++)
             {
+                if (_id == i) continue;
                 byte[] data = p.GetBytes();
-                _udpSend.Send(data, data.Length, ipep);
+                _udpSend.Send(data, data.Length, _broadcast[i]);
             }
         }
 
@@ -83,29 +93,41 @@ namespace BasicNetwork
                     continue;
                 }
 
+                // Do not Process packets when they already exists 
+                // In previous seen packets
+                if (_previousSeenPackets[receivedPacket.NodeOriginalSource] >= 
+                    receivedPacket.NodeOriginalSourceCount)
+                {
+                    continue;
+                }
+
+                _previousSeenPackets[receivedPacket.NodeOriginalSource] =
+                    receivedPacket.NodeOriginalSourceCount;
+
                 // Send to Next Node Hop
                 if (_id == receivedPacket.NodeDestination)
                 {
                     // My Message
-
                     receivedPacket.PrintDebugInfo();
                 }
-                else if (_id == receivedPacket.NodeNextHop)
+                else
                 {
                     // Prepare Message to Destination
-                    _idCount++;
                     Packet newPacket = new Packet()
                     {
                         NodeOriginalSource = receivedPacket.NodeOriginalSource,
                         NodeSource = _id,
                         NodeDestination = receivedPacket.NodeDestination,
                         Info = receivedPacket.Info,
-                        NodeSourceCount = _idCount,
-                        NodeNextHop = _networkGraph.GetNextNode(_id, receivedPacket.NodeDestination)
+                        NodeOriginalSourceCount = receivedPacket.NodeOriginalSourceCount,
                     };
 
                     // Send Message
                     _packetQueue.Enqueue(newPacket);
+
+                    Console.WriteLine("Relay OrigSrc {0}, OrigSrcCnt {1}",
+                        newPacket.NodeOriginalSource,
+                        newPacket.NodeOriginalSourceCount);
                 }
             }
         }
@@ -175,8 +197,7 @@ namespace BasicNetwork
                 NodeSource = _id,
                 NodeOriginalSource = _id,
                 NodeDestination = 4,
-                NodeNextHop = _networkGraph.GetNextNode(_id, 4),
-                NodeSourceCount = _idCount
+                NodeOriginalSourceCount = _idCount
             };
 
             // Send Packet
