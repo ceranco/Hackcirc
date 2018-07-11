@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NetworkGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1000"
+        Title="MainWindow" Height="651" Width="1000"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
@@ -35,7 +35,30 @@
                 <TextBlock TextWrapping="Wrap" Text="Packet Sniffing:" />
             </Viewbox>
             <RichTextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" />
+            <Viewbox Grid.Row="0" Grid.Column="1">
+                <TextBlock TextWrapping="Wrap" Text="Neighbours:" />
+            </Viewbox>
             <local:ConnectivityGraphic Grid.Row="1" Grid.Column="1" />
+        </Grid>
+        <Grid Grid.Row="3" Margin="0 0 0 10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Enter Message:" FontSize="20" Margin="20 20 0 0"></Label>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="InputBox" 
+                         Margin="20 0 0 0"/>
+                <Button Grid.Column="1" Content="Send" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center" 
+                        FontSize="20" Padding="50, 20"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
