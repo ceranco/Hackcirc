@@ -12,7 +12,7 @@ namespace BasicNetwork
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Program Version 2.9\n");
+            Console.WriteLine("Program Version 2.10\n");
 
             Node node = new Node();
 
@@ -25,7 +25,7 @@ namespace BasicNetwork
             byte[] result = new byte[intArray.Length * sizeof(int)];
             Buffer.BlockCopy(intArray, 0, result, 0, result.Length);
 
-            node.Foo(result);
+            node.Foo(result, result.Length);
 
             while (true)
             {

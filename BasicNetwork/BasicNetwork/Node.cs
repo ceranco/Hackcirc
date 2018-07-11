@@ -265,7 +265,7 @@ namespace BasicNetwork
             }
         }
 
-        public void Foo(byte [] info)
+        public void Foo(byte [] info, int infoSize)
         {
             if (_id != 1) return;
             
@@ -274,9 +274,10 @@ namespace BasicNetwork
             Packet p = new Packet()
             {
                 Info = info,
+                InfoSize = infoSize,
                 NodeSource = _id,
                 NodeOriginalSource = _id,
-                NodeDestination = 4,
+                NodeDestination = 3,
                 NodeOriginalSourceCount = timeCount
             };
 
