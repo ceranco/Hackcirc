@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BasicNetwork
 {
-    class NetworkGraph
+    public class NetworkGraph
     {
         bool[][] _routingTable;
         readonly int _maxNodes;
@@ -43,7 +43,7 @@ namespace BasicNetwork
                 if (_routingTable[dst][i] == true)
                 {
                     nextDst = i;
-                    
+
                     if (src == nextDst)
                     {
                         return dst;
@@ -68,6 +68,20 @@ namespace BasicNetwork
         {
             get { return _routingTable[i][j]; }
             set { _routingTable[i][j] = value; }
+        }
+
+        public void Print()
+        {
+            Console.WriteLine("Network Graph is : ");
+            for (int i = 0; i < _maxNodes; i++)
+            {
+                for (int j = 0; j < _maxNodes; j++)
+                {
+                    Console.Write(Convert.ToInt32(this[i, j]));
+                    Console.Write(" ");
+                }
+                Console.WriteLine("");
+            }
         }
     }
 }

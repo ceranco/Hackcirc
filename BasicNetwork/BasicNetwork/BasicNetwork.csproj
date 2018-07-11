@@ -45,11 +45,21 @@
     <Compile Include="NeighbourNode.cs" />
     <Compile Include="NetworkGraph.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="Packet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="ID.txt" />
+    <Content Include="network.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>copy $(ProjectDir)ID.txt $(TargetDir)ID.txt
+copy $(ProjectDir)network.txt $(TargetDir)network.txt
+</PreBuildEvent>
+  </PropertyGroup>
 </Project>

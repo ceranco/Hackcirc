@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test
+namespace BasicNetwork
 {
     public class Packet
     {
@@ -17,7 +17,7 @@ namespace Test
         public int Info { get; set; }
         #endregion
 
-        public Packet(byte [] data)
+        public Packet(byte[] data)
         {
             int index = 0;
             NodeOriginalSource = BitConverter.ToInt32(data, index);
@@ -30,7 +30,7 @@ namespace Test
             index += sizeof(int);
             NodeDestination = BitConverter.ToInt32(data, index);
             index += sizeof(int);
-            Info = BitConverter.ToInt32(data, index);            
+            Info = BitConverter.ToInt32(data, index);
         }
 
         public Packet()
