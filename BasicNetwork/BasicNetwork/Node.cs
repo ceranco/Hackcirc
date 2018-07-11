@@ -165,7 +165,7 @@ namespace BasicNetwork
 
         public void Foo(int info)
         {
-            if (_id == 4) return;
+            if (_id != 1) return;
             
             _idCount++;
 
