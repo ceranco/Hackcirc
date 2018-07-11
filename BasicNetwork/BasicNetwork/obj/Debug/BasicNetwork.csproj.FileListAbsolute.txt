@@ -12,4 +12,3 @@ C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork
 C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.exe
 C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.pdb
 C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\BasicNetwork\bin\Debug\NB.txt
-C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.csprojAssemblyReference.cache

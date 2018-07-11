@@ -150,8 +150,10 @@ namespace BasicNetwork
                             NodeDestination = receivedPacket.NodeOriginalSource,
                             IsAcknoledgment = 1,
                             NodeOriginalSourceCount = timeCount,
-                            AcknoledgmentCount = receivedPacket.NodeOriginalSourceCount
+                            AcknoledgmentCount = receivedPacket.NodeOriginalSourceCount,
+                            InfoSize = 4
                         };
+                        newPacket.Info = new byte[newPacket.InfoSize];
 
                         // Enqueue Packet for Send
                         _packetQueueToSend.Enqueue(newPacket);
