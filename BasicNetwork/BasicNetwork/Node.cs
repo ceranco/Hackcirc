@@ -196,9 +196,12 @@ namespace BasicNetwork
                 Info = info,
                 NodeSource = _id,
                 NodeOriginalSource = _id,
-                NodeDestination = 4,
+                NodeDestination = 3,
                 NodeOriginalSourceCount = _idCount
             };
+
+            // Add myself to seenMessages
+            _previousSeenPackets[_id] = _idCount;
 
             // Send Packet
             SendBroadcast(p);
