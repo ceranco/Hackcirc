@@ -42,7 +42,7 @@ namespace BasicNetwork
 
         public void PrintDebugInfo()
         {
-            Console.WriteLine("NodeOriginalSource {0}, NodeSource {1}, NodeOriginalSourceCount {2}, NodeDestination {3}, IsAcknoledgment {4}, AcknoledgmentCount {5}, Info {6}",
+            Console.WriteLine("NodeOrigSrc {0}, NodeSrc {1}, NodeOrigSrcCnt {2}, NodeDest {3}, IsAckt {4}, AckCnt {5}, Info {6}",
                 NodeOriginalSource, NodeSource, 
                 NodeOriginalSourceCount, NodeDestination,
                 IsAcknoledgment, AcknoledgmentCount,
@@ -66,7 +66,7 @@ namespace BasicNetwork
 
         public void PrintAcknoledgmentInfo()
         {
-            Console.WriteLine("Acknoledge Src->Dest {0}->{1}, OrigSrcCnt {2}",
+            Console.WriteLine("Ack Src->Dest {0}->{1}, OrigSrcCnt {2}",
                         NodeOriginalSource,
                         NodeDestination,
                         NodeOriginalSourceCount);
