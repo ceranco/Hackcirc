@@ -76,6 +76,13 @@ namespace BasicNetwork
                 byte[] bytes = _udpReceive.Receive(ref _receiveEndPoint);
                 Packet receivedPacket = new Packet(bytes);                
 
+                // Do not Process Packets if they are not coming from 
+                // Physical Neighbours
+                if (!_neighbourNodes.Contains(receivedPacket.NodeSource))
+                {
+                    continue;
+                }
+
                 // Send to Next Node Hop
                 if (_id == receivedPacket.NodeDestination)
                 {
@@ -156,6 +163,8 @@ namespace BasicNetwork
 
         public void Foo(int info)
         {
+            if (_id == 4) return;
+            
             _idCount++;
 
             Packet p = new Packet()
