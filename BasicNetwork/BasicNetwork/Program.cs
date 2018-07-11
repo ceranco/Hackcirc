@@ -14,19 +14,13 @@ namespace BasicNetwork
         {
             int count = 0;
             Node node = new Node();
-            //string str = "Is anyone out there?";
+            Console.WriteLine("Version 1.0.0");
 
             while (true)
             {
                 count++;
-
-                //string str = count.ToString();
-                //byte[] sendBytes = Encoding.ASCII.GetBytes(str);
-                //Message m = new Message(Encoding.ASCII.GetBytes(str));
-                //node.SendBroadcast(m);
-
                 node.Foo(count);
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
             }
         }
     }
