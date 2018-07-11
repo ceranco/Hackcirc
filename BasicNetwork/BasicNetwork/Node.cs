@@ -77,11 +77,6 @@ namespace BasicNetwork
                 Packet receivedPacket = new Packet(bytes);
                 receivedPacket.PrintDebugInfo();
 
-                if ( receivedPacket.NodeSource)
-                {
-
-                }
-
                 // Send to Next Node Hop
                 if (_id == receivedPacket.NodeDestination)
                 {
@@ -156,6 +151,24 @@ namespace BasicNetwork
 
                 _networkGraph[source, dest] = true;
             }
+        }
+
+        public void Foo(int info)
+        {
+            _idCount++;
+
+            Packet p = new Packet()
+            {
+                Info = info,
+                NodeSource = _id,
+                NodeOriginalSource = _id,
+                NodeDestination = 4,
+                NodeNextHop = _networkGraph.GetNextNode(_id, 4),
+                NodeSourceCount = _idCount
+            };
+
+            // Send Packet
+            SendBroadcast(p);
         }
     }
 }
