@@ -16,34 +16,40 @@ namespace BasicNetwork
         #endregion
 
         #region Members
-        private UdpClient udpSend = new UdpClient() { EnableBroadcast = true };
-        private UdpClient udpReceive = new UdpClient(kBroadcastPort) { EnableBroadcast = true };
-        private Dictionary<int, IPEndPoint> broadcast =
-            new Dictionary<int, IPEndPoint>();
-        IPEndPoint endpointReceive = new IPEndPoint(IPAddress.Any, 0);
-        Thread receiveThread = null;
-        Thread mainThread = null;
-        private int myNodeID = 0;
-        private Int64 myNodeIDCount = 0;
-        private List<int> neighbourNodes = new List<int>();
-        //private bool[,] networkMap = new bool[kNumNodes,kNumNodes];
-        private NetworkGraph networkGraph = new NetworkGraph(kNumNodes);
-        private ConcurrentQueue<Packet> packetQueue = new ConcurrentQueue<Packet>();
+
+        // UDP clients for sending and receiving messages
+        UdpClient _udpSend = new UdpClient() { EnableBroadcast = true };
+        UdpClient _udpReceive = new UdpClient(kBroadcastPort) { EnableBroadcast = true };
+
+        // IP endpoints for receiving and sending broadcasts
+        IPEndPoint _receiveEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        Dictionary<int, IPEndPoint> _broadcast = new Dictionary<int, IPEndPoint>();
+
+        // Threads for receiving and sending
+        Thread _receiveThread = null;
+        Thread _mainThread = null;
+        int _id = 0;
+        Int64 _idCount = 0;
+        List<int> _neighbourNodes = new List<int>();
+
+        NetworkGraph _networkGraph = new NetworkGraph(kNumNodes);
+        ConcurrentQueue<Packet> _packetQueue = new ConcurrentQueue<Packet>();
+
         #endregion
 
         public Node()
         {
-            broadcast.Add(0, new IPEndPoint(IPAddress.Parse("1.1.0.29"), kBroadcastPort));
-            broadcast.Add(1, new IPEndPoint(IPAddress.Parse("1.1.0.28"), kBroadcastPort));
-            broadcast.Add(2, new IPEndPoint(IPAddress.Parse("1.1.0.35"), kBroadcastPort));
-            broadcast.Add(3, new IPEndPoint(IPAddress.Parse("1.1.0.37"), kBroadcastPort));
-            broadcast.Add(4, new IPEndPoint(IPAddress.Parse("1.1.0.64"), kBroadcastPort));
+            _broadcast.Add(0, new IPEndPoint(IPAddress.Parse("1.1.0.29"), kBroadcastPort));
+            _broadcast.Add(1, new IPEndPoint(IPAddress.Parse("1.1.0.28"), kBroadcastPort));
+            _broadcast.Add(2, new IPEndPoint(IPAddress.Parse("1.1.0.35"), kBroadcastPort));
+            _broadcast.Add(3, new IPEndPoint(IPAddress.Parse("1.1.0.37"), kBroadcastPort));
+            _broadcast.Add(4, new IPEndPoint(IPAddress.Parse("1.1.0.64"), kBroadcastPort));
 
-            receiveThread = new Thread(() => Receive());
-            receiveThread.Start();
+            _receiveThread = new Thread(() => Receive());
+            _receiveThread.Start();
 
-            mainThread = new Thread(() => MainLoop());
-            mainThread.Start();
+            _mainThread = new Thread(() => MainLoop());
+            _mainThread.Start();
 
             GetMyID();
 
@@ -51,15 +57,15 @@ namespace BasicNetwork
 
             PrintNeighbours();
 
-            networkGraph.Print();
+            _networkGraph.Print();
         }
 
         public void SendBroadcast(Packet p)
         {
-            foreach (IPEndPoint ipep in broadcast.Values)
+            foreach (IPEndPoint ipep in _broadcast.Values)
             {
                 byte[] data = p.GetBytes();
-                udpSend.Send(data, data.Length, ipep);
+                _udpSend.Send(data, data.Length, ipep);
             }
         }
 
@@ -67,32 +73,36 @@ namespace BasicNetwork
         {
             while (true)
             {
-                byte[] bytes = udpReceive.Receive(ref endpointReceive);
+                byte[] bytes = _udpReceive.Receive(ref _receiveEndPoint);
                 Packet receivedPacket = new Packet(bytes);
                 receivedPacket.PrintDebugInfo();
 
+                if ( receivedPacket.NodeSource)
+                {
+
+                }
+
                 // Send to Next Node Hop
-                if (myNodeID == receivedPacket.NodeDestination)
+                if (_id == receivedPacket.NodeDestination)
                 {
                     // My Message
                 }
-                else if (myNodeID == receivedPacket.NodeNextHop)
+                else if (_id == receivedPacket.NodeNextHop)
                 {
                     // Prepare Message to Destination
-                    myNodeIDCount++;
+                    _idCount++;
                     Packet newPacket = new Packet()
                     {
                         NodeOriginalSource = receivedPacket.NodeOriginalSource,
-                        NodeSource = myNodeID,
+                        NodeSource = _id,
                         NodeDestination = receivedPacket.NodeDestination,
                         Info = receivedPacket.Info,
-                        NodeSourceCount = myNodeIDCount,
-                        NodeNextHop =
-                            networkGraph.GetNextNode(myNodeID, receivedPacket.NodeDestination)
+                        NodeSourceCount = _idCount,
+                        NodeNextHop = _networkGraph.GetNextNode(_id, receivedPacket.NodeDestination)
                     };
 
                     // Send Message
-                    packetQueue.Enqueue(newPacket);
+                    _packetQueue.Enqueue(newPacket);
                 }
             }
         }
@@ -102,7 +112,7 @@ namespace BasicNetwork
             while (true)
             {
                 Packet p;
-                if (!packetQueue.TryDequeue(out p))
+                if (!_packetQueue.TryDequeue(out p))
                 {
                     Thread.Sleep(100);
                     continue;
@@ -116,7 +126,7 @@ namespace BasicNetwork
         public void PrintNeighbours()
         {
             Console.Write("My Neighbours are : ");
-            foreach (int n in neighbourNodes)
+            foreach (int n in _neighbourNodes)
             {
                 Console.Write(n.ToString() + " ");
             }
@@ -126,8 +136,8 @@ namespace BasicNetwork
         public void GetMyID()
         {
             var idFile = File.ReadAllLines("ID.txt");
-            myNodeID = int.Parse(idFile[0]);
-            Console.WriteLine("My ID is: " + myNodeID.ToString());
+            _id = int.Parse(idFile[0]);
+            Console.WriteLine("My ID is: " + _id.ToString());
         }
 
         public void GetNetwork()
@@ -139,31 +149,13 @@ namespace BasicNetwork
                 int source = int.Parse(p[0]);
                 int dest = int.Parse(p[1]);
 
-                if (myNodeID == source)
+                if (_id == source)
                 {
-                    neighbourNodes.Add(dest);
+                    _neighbourNodes.Add(dest);
                 }
 
-                networkGraph[source, dest] = true;
+                _networkGraph[source, dest] = true;
             }
-        }
-
-        public void Foo(int info)
-        {
-            myNodeIDCount++;
-
-            Packet p = new Packet()
-            {
-                Info = info,
-                NodeSource = myNodeID,
-                NodeOriginalSource = myNodeID,
-                NodeDestination = 4,
-                NodeNextHop = networkGraph.GetNextNode(myNodeID, 4),
-                NodeSourceCount = myNodeIDCount
-            };
-
-            // Send Packet
-            SendBroadcast(p);
         }
     }
 }
