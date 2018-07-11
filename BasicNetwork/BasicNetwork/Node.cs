@@ -13,6 +13,7 @@ namespace BasicNetwork
         #region Constants
         private static int kBroadcastPort = 2000;
         //private static int kNumNodes = 5;
+        private static int kTimeoutInSeconds = 10;
         #endregion
 
         #region Members
@@ -29,9 +30,12 @@ namespace BasicNetwork
         Thread _receiveThread = null;
         Thread _mainThread = null;
         int _id = 0;
-        //Int64 _idCount = 0;
         List<int> _neighbourNodes = new List<int>();
-        ConcurrentQueue<Packet> _packetQueue = new ConcurrentQueue<Packet>();
+        ConcurrentQueue<Packet> _packetQueueToSend = new ConcurrentQueue<Packet>();
+
+        List<Packet> _packetListForAcknoledge = new List<Packet>();
+        object mutex = new object();
+
         Dictionary<int, Int64> _previousSeenPackets
             = new Dictionary<int, Int64>();
         #endregion
@@ -73,6 +77,20 @@ namespace BasicNetwork
             }
         }
 
+        private Packet PreparePacket(Packet receivedPacket)
+        {
+            Packet newPacket = new Packet()
+            {
+                NodeOriginalSource = receivedPacket.NodeOriginalSource,
+                NodeSource = _id,
+                NodeDestination = receivedPacket.NodeDestination,
+                Info = receivedPacket.Info,
+                NodeOriginalSourceCount = receivedPacket.NodeOriginalSourceCount,
+            };
+
+            return newPacket;
+        }
+
         public void Receive()
         {
             while (true)
@@ -98,31 +116,74 @@ namespace BasicNetwork
                 _previousSeenPackets[receivedPacket.NodeOriginalSource] =
                     receivedPacket.NodeOriginalSourceCount;
 
-                // Send to Next Node Hop
-                if (_id == receivedPacket.NodeDestination)
+                // Check if Current Message is Broadcast Message
+                // Send Packet To All Neighbours
+                if (receivedPacket.NodeDestination == -1)
+                {                    
+                    // Prepare Packet
+                    Packet newPacket = PreparePacket(receivedPacket);
+
+                    // Enqueue Packet for Send
+                    _packetQueueToSend.Enqueue(newPacket);
+
+                    newPacket.PrintBroadcastInfo();
+                }                
+                else if (_id == receivedPacket.NodeDestination)
                 {
                     // My Message
                     receivedPacket.PrintDebugInfo();
-                }
-                else
-                {
-                    // Prepare Message to Destination
-                    Packet newPacket = new Packet()
+
+                    // This Package is not Acknoledgment
+                    if (receivedPacket.IsAcknoledgment != 1)
                     {
-                        NodeOriginalSource = receivedPacket.NodeOriginalSource,
-                        NodeSource = _id,
-                        NodeDestination = receivedPacket.NodeDestination,
-                        Info = receivedPacket.Info,
-                        NodeOriginalSourceCount = receivedPacket.NodeOriginalSourceCount,
-                    };
+                        // Prepare Acknowledge Packet
+                        Int64 timeCount = Utility.GetTimeCount();
+                        Packet newPacket = new Packet()
+                        {
+                            NodeOriginalSource = _id,
+                            NodeSource = _id,
+                            NodeDestination = receivedPacket.NodeOriginalSource,
+                            IsAcknoledgment = 1,
+                            NodeOriginalSourceCount = timeCount,
+                            AcknoledgmentCount = receivedPacket.NodeOriginalSourceCount
+                        };
 
-                    // Send Message
-                    _packetQueue.Enqueue(newPacket);
+                        // Enqueue Packet for Send
+                        _packetQueueToSend.Enqueue(newPacket);
 
-                    Console.WriteLine("Relay Src->Dest {0}->{1}, OrigSrcCnt {2}",
-                        newPacket.NodeOriginalSource,
-                        newPacket.NodeDestination,
-                        newPacket.NodeOriginalSourceCount);
+                        newPacket.PrintAcknoledgmentInfo();
+                    }
+                    else // Acknowledge
+                    {
+                        // Remove from List
+                        lock (mutex)
+                        {
+                            Packet founded = null;
+                            foreach (Packet p in _packetListForAcknoledge)
+                            {
+                                if (p.NodeOriginalSourceCount == 
+                                    receivedPacket.AcknoledgmentCount)
+                                {
+                                    founded = p;
+                                    break;
+                                }
+                            }
+                            if (founded != null)
+                            {
+                                _packetListForAcknoledge.Remove(founded);
+                            }
+                        }
+                    }
+                }
+                else // Send to Next Node Hop
+                {
+                    // Prepare Packet
+                    Packet newPacket = PreparePacket(receivedPacket);
+
+                    // Enqueue Packet for Send
+                    _packetQueueToSend.Enqueue(newPacket);
+
+                    newPacket.PrintRelayInfo();
                 }
             }
         }
@@ -132,15 +193,39 @@ namespace BasicNetwork
             while (true)
             {
                 Packet p;
-                if (!_packetQueue.TryDequeue(out p))
+                if (_packetQueueToSend.TryDequeue(out p))
                 {
-                    Thread.Sleep(100);
-                    continue;
+                    // Send Packet
+                    SendBroadcast(p);
+
+                    // Add Packet for Acknowledge List
+                    _packetListForAcknoledge.Add(p);
                 }
 
-                // Send Packet
-                SendBroadcast(p);
+                lock (mutex)
+                {
+                    Int64 currentTimeCount = Utility.GetTimeCount();
+                    List<Packet> packetsToRetransmit = new List<Packet>();
+                    foreach (Packet pack in _packetListForAcknoledge)
+                    {
+                        if (pack.NodeOriginalSourceCount +
+                            1000 * kTimeoutInSeconds < currentTimeCount)
+                        {
+                            packetsToRetransmit.Add(pack);
+                        }
+                    }
+
+                    foreach (Packet pret in packetsToRetransmit)
+                    {                        
+                        pret.NodeOriginalSourceCount = currentTimeCount;
+                        SendBroadcast(pret);                        
+                    }
+                }
+
+                Thread.Sleep(50);                
             }
+
+            // _packetBagForAcknoledge
         }
 
         public void PrintNeighbours()
@@ -174,9 +259,8 @@ namespace BasicNetwork
         public void Foo(int info)
         {
             if (_id != 1) return;
-
-            // Time since 1970, in order 
-            var idCount = DateTime.Now.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+            
+            Int64 timeCount = Utility.GetTimeCount();
 
             Packet p = new Packet()
             {
@@ -184,11 +268,11 @@ namespace BasicNetwork
                 NodeSource = _id,
                 NodeOriginalSource = _id,
                 NodeDestination = 4,
-                NodeOriginalSourceCount = idCount
+                NodeOriginalSourceCount = timeCount
             };
 
             // Add myself to seenMessages
-            _previousSeenPackets[_id] = idCount;
+            _previousSeenPackets[_id] = timeCount;
 
             // Send Packet
             SendBroadcast(p);

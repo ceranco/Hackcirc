@@ -11,9 +11,11 @@ namespace BasicNetwork
         #region Properties
         public int NodeOriginalSource { get; set; }
         public int NodeSource { get; set; }
-        public Int64 NodeOriginalSourceCount { get; set; }
-        public int NodeDestination { get; set; }
-        public int Info { get; set; }
+        public Int64 NodeOriginalSourceCount { get; set; } // Unique ID
+        public int NodeDestination { get; set; } // -1 Means All
+        public int IsAcknoledgment { get; set; }
+        public Int64 AcknoledgmentCount { get; set; }
+        public int Info { get; set; }       
         #endregion
 
         public Packet(byte[] data)
@@ -27,6 +29,10 @@ namespace BasicNetwork
             index += sizeof(Int64);
             NodeDestination = BitConverter.ToInt32(data, index);
             index += sizeof(int);
+            IsAcknoledgment = BitConverter.ToInt32(data, index);
+            index += sizeof(int);
+            AcknoledgmentCount = BitConverter.ToInt64(data, index);
+            index += sizeof(Int64);
             Info = BitConverter.ToInt32(data, index);
         }
 
@@ -36,8 +42,34 @@ namespace BasicNetwork
 
         public void PrintDebugInfo()
         {
-            Console.WriteLine("NodeOriginalSource {0}, NodeSource {1}, NodeOriginalSourceCount {2},NodeDestination {3}, Info {4}",
-                NodeOriginalSource, NodeSource, NodeOriginalSourceCount, NodeDestination, Info);
+            Console.WriteLine("NodeOriginalSource {0}, NodeSource {1}, NodeOriginalSourceCount {2}, NodeDestination {3}, IsAcknoledgment {4}, AcknoledgmentCount {5}, Info {6}",
+                NodeOriginalSource, NodeSource, 
+                NodeOriginalSourceCount, NodeDestination,
+                IsAcknoledgment, AcknoledgmentCount,
+                Info);
+        }
+
+        public void PrintBroadcastInfo()
+        {
+            Console.WriteLine("BroadCast Src {0}, OrigSrcCnt {1}",
+                        NodeOriginalSource,
+                        NodeOriginalSourceCount);
+        }
+
+        public void PrintRelayInfo()
+        {
+            Console.WriteLine("Relay Src->Dest {0}->{1}, OrigSrcCnt {2}",
+                        NodeOriginalSource,
+                        NodeDestination,
+                        NodeOriginalSourceCount);
+        }
+
+        public void PrintAcknoledgmentInfo()
+        {
+            Console.WriteLine("Acknoledge Src->Dest {0}->{1}, OrigSrcCnt {2}",
+                        NodeOriginalSource,
+                        NodeDestination,
+                        NodeOriginalSourceCount);
         }
 
         public byte[] GetBytes()
@@ -48,6 +80,10 @@ namespace BasicNetwork
             result = result.Concat(BitConverter.GetBytes(NodeSource));
             result = result.Concat(BitConverter.GetBytes(NodeOriginalSourceCount));
             result = result.Concat(BitConverter.GetBytes(NodeDestination));
+
+            result = result.Concat(BitConverter.GetBytes(IsAcknoledgment));
+            result = result.Concat(BitConverter.GetBytes(AcknoledgmentCount));
+
             result = result.Concat(BitConverter.GetBytes(Info));
 
             byte[] array = result.ToArray();

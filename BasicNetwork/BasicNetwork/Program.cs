@@ -12,15 +12,18 @@ namespace BasicNetwork
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Program Version 1.12\n");
+            Console.WriteLine("Program Version 2.0\n");
 
             int count = 0;
             Node node = new Node();
-            
+
+            count++;
+            node.Foo(count);
+
             while (true)
             {
-                count++;
-                node.Foo(count);
+                //count++;
+                //node.Foo(count);
                 Thread.Sleep(15000);
             }
         }
