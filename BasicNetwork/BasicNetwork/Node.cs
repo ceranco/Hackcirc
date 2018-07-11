@@ -280,8 +280,8 @@ namespace BasicNetwork
             // Add myself to seenMessages
             _previousSeenPackets[_id] = timeCount;
 
-            // Send Packet
-            SendBroadcast(p);
+            // Enqueue Packet for Send
+            _packetQueueToSend.Enqueue(p);
         }
     }
 }
