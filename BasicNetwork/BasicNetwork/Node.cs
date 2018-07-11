@@ -198,8 +198,12 @@ namespace BasicNetwork
                     // Send Packet
                     SendBroadcast(p);
 
-                    // Add Packet for Acknowledge List
-                    _packetListForAcknoledge.Add(p);
+                    // Add Packet for Acknowledge List Only 
+                    // if you are an Original Source
+                    if (p.NodeOriginalSource == _id)
+                    {
+                        _packetListForAcknoledge.Add(p);
+                    }
                 }
 
                 lock (mutex)
@@ -218,6 +222,10 @@ namespace BasicNetwork
                     foreach (Packet pret in packetsToRetransmit)
                     {                        
                         pret.NodeOriginalSourceCount = currentTimeCount;
+
+                        // Add myself to seenMessages
+                        _previousSeenPackets[_id] = currentTimeCount;
+
                         SendBroadcast(pret);                        
                     }
                 }

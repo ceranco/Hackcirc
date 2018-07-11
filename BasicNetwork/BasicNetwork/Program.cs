@@ -12,7 +12,7 @@ namespace BasicNetwork
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Program Version 2.0\n");
+            Console.WriteLine("Program Version 2.1\n");
 
             int count = 0;
             Node node = new Node();
