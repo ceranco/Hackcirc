@@ -82,6 +82,7 @@ namespace BasicNetwork
                 }
                 Console.WriteLine("");
             }
+            Console.WriteLine("");
         }
     }
 }

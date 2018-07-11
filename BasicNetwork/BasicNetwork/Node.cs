@@ -134,6 +134,7 @@ namespace BasicNetwork
                 Console.Write(n.ToString() + " ");
             }
             Console.WriteLine("");
+            Console.WriteLine("");
         }
 
         public void GetMyID()
@@ -141,6 +142,7 @@ namespace BasicNetwork
             var idFile = File.ReadAllLines("ID.txt");
             _id = int.Parse(idFile[0]);
             Console.WriteLine("My ID is: " + _id.ToString());
+            Console.WriteLine("");
         }
 
         public void GetNetwork()

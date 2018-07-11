@@ -12,10 +12,11 @@ namespace BasicNetwork
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Program Version 1.0.1\n");
+
             int count = 0;
             Node node = new Node();
-            Console.WriteLine("Version 1.0.0");
-
+            
             while (true)
             {
                 count++;
