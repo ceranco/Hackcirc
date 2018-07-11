@@ -40,6 +40,10 @@ namespace BasicNetwork
             = new Dictionary<int, Int64>();
         #endregion
 
+        #region Properties
+        public int Id { get => _id; set => _id = value; }
+        #endregion
+
         public Node()
         {
             _broadcast.Add(0, new IPEndPoint(IPAddress.Parse("1.1.0.29"), kBroadcastPort));
@@ -83,18 +87,31 @@ namespace BasicNetwork
             {
                 NodeOriginalSource = receivedPacket.NodeOriginalSource,
                 NodeSource = _id,
-                NodeDestination = receivedPacket.NodeDestination,
-                Info = receivedPacket.Info,
+                NodeDestination = receivedPacket.NodeDestination,                
+                InfoSize = receivedPacket.InfoSize,
                 NodeOriginalSourceCount = receivedPacket.NodeOriginalSourceCount,
                 IsAcknoledgment = receivedPacket.IsAcknoledgment,
                 AcknoledgmentCount = receivedPacket.AcknoledgmentCount
             };
+
+            newPacket.Info = new byte[newPacket.InfoSize];
+            Buffer.BlockCopy(receivedPacket.Info, 0, newPacket.Info, 0, newPacket.InfoSize);
 
             return newPacket;
         }
 
         public void Receive()
         {
+            int startIndex = 0;
+            byte[] pictureStream = new byte[5662];
+            for (int i = 0; i < 5662; i ++)
+            {
+                pictureStream[i] = 0xFF;
+            }
+
+
+            //pictureStream.
+
             while (true)
             {
                 byte[] bytes = _udpReceive.Receive(ref _receiveEndPoint);
@@ -132,13 +149,23 @@ namespace BasicNetwork
                 }                
                 else if (_id == receivedPacket.NodeDestination)
                 {
-                    // My Message
-                    receivedPacket.PrintDebugInfo();
+                    // My Message                   
 
                     // This Package is not Acknoledgment
                     if (receivedPacket.IsAcknoledgment != 1)
                     {
-                        // Prepare Acknowledge Packet
+                        Buffer.BlockCopy(receivedPacket.Info, 0,
+                            pictureStream, startIndex, receivedPacket.InfoSize);
+                        //receivedPacket.PrintDebugInfo(pictureStream);
+                        using (FileStream file =
+                            new FileStream("picture.bmp",
+                                FileMode.Open, System.IO.FileAccess.Write))
+                        {
+                            file.Write(pictureStream, 0, pictureStream.Length);
+                        }
+                        startIndex += receivedPacket.InfoSize;
+
+                        #region Prepare Acknowledge Packet
                         Int64 timeCount = Utility.GetTimeCount();
                         Packet newPacket = new Packet()
                         {
@@ -147,13 +174,16 @@ namespace BasicNetwork
                             NodeDestination = receivedPacket.NodeOriginalSource,
                             IsAcknoledgment = 1,
                             NodeOriginalSourceCount = timeCount,
-                            AcknoledgmentCount = receivedPacket.NodeOriginalSourceCount
+                            AcknoledgmentCount = receivedPacket.NodeOriginalSourceCount,
+                            InfoSize = 4
                         };
+                        newPacket.Info = new byte[newPacket.InfoSize];
 
                         // Enqueue Packet for Send
                         _packetQueueToSend.Enqueue(newPacket);
 
                         newPacket.PrintAcknoledgmentInfo();
+                        #endregion
                     }
                     else // Acknowledge
                     {
@@ -265,21 +295,23 @@ namespace BasicNetwork
             }
         }
 
-        public void Foo(byte [] info, int infoSize)
+        public void SendInfo(byte [] info, int infoLength, int nodeDest)
         {
             if (_id != 1) return;
             
             Int64 timeCount = Utility.GetTimeCount();
 
             Packet p = new Packet()
-            {
-                Info = info,
-                InfoSize = infoSize,
+            {                
+                InfoSize = infoLength,
                 NodeSource = _id,
                 NodeOriginalSource = _id,
-                NodeDestination = 3,
+                NodeDestination = nodeDest,
                 NodeOriginalSourceCount = timeCount
             };
+            p.Info = new byte[p.InfoSize];
+            Buffer.BlockCopy(info, 0, p.Info, 0, infoLength);
+
 
             // Add myself to seenMessages
             _previousSeenPackets[_id] = timeCount;

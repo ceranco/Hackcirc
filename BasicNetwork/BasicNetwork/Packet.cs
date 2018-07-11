@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,16 +52,20 @@ namespace BasicNetwork
                 NodeOriginalSourceCount, NodeDestination,
                 IsAcknoledgment, AcknoledgmentCount);
 
-            int[] result = Array.ConvertAll(Info, Convert.ToInt32);
+            //int[] result = new int[Info.Length / 4];
+            //for (int i = 0; i < Info.Length; i += 4)
+            //{
+            //    result[i / 4] = BitConverter.ToInt32(Info, i);
+            //}
 
-            using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter(@"output.txt"))
-            {
-                foreach (int num in result)
-                {
-                    file.WriteLine(num);                    
-                }
-            }
+            //using (System.IO.StreamWriter file =
+            //    new System.IO.StreamWriter(@"output.txt"))
+            //{
+            //    foreach (int num in result)
+            //    {
+            //        file.WriteLine(num);                    
+            //    }
+            //}            
         }
 
         public void PrintBroadcastInfo()
