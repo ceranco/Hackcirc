@@ -154,7 +154,7 @@ namespace BasicNetwork
                         }
                         startIndex += receivedPacket.InfoSize;
 
-                        // Prepare Acknowledge Packet
+                        #region Prepare Acknowledge Packet
                         Int64 timeCount = Utility.GetTimeCount();
                         Packet newPacket = new Packet()
                         {
@@ -172,6 +172,7 @@ namespace BasicNetwork
                         _packetQueueToSend.Enqueue(newPacket);
 
                         newPacket.PrintAcknoledgmentInfo();
+                        #endregion
                     }
                     else // Acknowledge
                     {
