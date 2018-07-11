@@ -13,7 +13,3 @@ C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork
 C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.pdb
 C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\BasicNetwork\bin\Debug\NB.txt
 C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.csprojAssemblyReference.cache
-C:\Users\tomer_000\Documents\GitHub\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.csprojAssemblyReference.cache
-C:\Users\tomer_000\Documents\GitHub\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.csproj.CoreCompileInputs.cache
-C:\Users\tomer_000\Documents\GitHub\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.exe
-C:\Users\tomer_000\Documents\GitHub\Hackcirc\BasicNetwork\BasicNetwork\obj\Debug\BasicNetwork.pdb
