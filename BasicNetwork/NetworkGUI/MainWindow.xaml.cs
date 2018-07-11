@@ -20,6 +20,10 @@ namespace NetworkGUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string ID { get; set; } = "1";
+
+        public string MissionStatus { get; set; } = "Active";
+
         public MainWindow()
         {
             InitializeComponent();

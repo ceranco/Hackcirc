@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:NetworkGUI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.Resources>
             <Style TargetType="Ellipse">
                 <Setter Property="Fill" Value="#003366" />
@@ -57,5 +57,6 @@
             <Ellipse  x:Name="E6"/>
             <TextBlock Text="6"/>
         </Grid>
+
     </Grid>
 </UserControl>
