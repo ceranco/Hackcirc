@@ -74,13 +74,14 @@ namespace BasicNetwork
             while (true)
             {
                 byte[] bytes = _udpReceive.Receive(ref _receiveEndPoint);
-                Packet receivedPacket = new Packet(bytes);
-                receivedPacket.PrintDebugInfo();
+                Packet receivedPacket = new Packet(bytes);                
 
                 // Send to Next Node Hop
                 if (_id == receivedPacket.NodeDestination)
                 {
                     // My Message
+
+                    receivedPacket.PrintDebugInfo();
                 }
                 else if (_id == receivedPacket.NodeNextHop)
                 {
