@@ -40,6 +40,10 @@ namespace BasicNetwork
             = new Dictionary<int, Int64>();
         #endregion
 
+        #region Properties
+        public int Id { get => _id; set => _id = value; }
+        #endregion
+
         public Node()
         {
             _broadcast.Add(0, new IPEndPoint(IPAddress.Parse("1.1.0.29"), kBroadcastPort));
@@ -291,21 +295,23 @@ namespace BasicNetwork
             }
         }
 
-        public void Foo(byte [] info, int infoSize)
+        public void SendInfo(byte [] info, int infoLength, int nodeDest)
         {
             if (_id != 1) return;
             
             Int64 timeCount = Utility.GetTimeCount();
 
             Packet p = new Packet()
-            {
-                Info = info,
-                InfoSize = infoSize,
+            {                
+                InfoSize = infoLength,
                 NodeSource = _id,
                 NodeOriginalSource = _id,
-                NodeDestination = 0,
+                NodeDestination = nodeDest,
                 NodeOriginalSourceCount = timeCount
             };
+            p.Info = new byte[p.InfoSize];
+            Buffer.BlockCopy(info, 0, p.Info, 0, infoLength);
+
 
             // Add myself to seenMessages
             _previousSeenPackets[_id] = timeCount;
