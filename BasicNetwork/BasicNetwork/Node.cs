@@ -31,13 +31,9 @@ namespace BasicNetwork
         int _id = 0;
         Int64 _idCount = 0;
         List<int> _neighbourNodes = new List<int>();
-
-        NetworkGraph _networkGraph = new NetworkGraph(kNumNodes);
         ConcurrentQueue<Packet> _packetQueue = new ConcurrentQueue<Packet>();
-
         Dictionary<int, Int64> _previousSeenPackets
             = new Dictionary<int, Int64>();
-
         #endregion
 
         public Node()
@@ -65,8 +61,6 @@ namespace BasicNetwork
             GetNetwork();
 
             PrintNeighbours();
-
-            _networkGraph.Print();
         }
 
         public void SendBroadcast(Packet p)
@@ -125,8 +119,9 @@ namespace BasicNetwork
                     // Send Message
                     _packetQueue.Enqueue(newPacket);
 
-                    Console.WriteLine("Relay OrigSrc {0}, OrigSrcCnt {1}",
+                    Console.WriteLine("Relay Src->Dest {0->1}, OrigSrcCnt {2}",
                         newPacket.NodeOriginalSource,
+                        newPacket.NodeDestination,
                         newPacket.NodeOriginalSourceCount);
                 }
             }
@@ -169,19 +164,10 @@ namespace BasicNetwork
 
         public void GetNetwork()
         {
-            var networkFile = File.ReadAllLines("network.txt");
-            foreach (string pair in networkFile)
+            var neighbours = File.ReadAllLines("NB.txt");
+            foreach (string n in neighbours)
             {
-                string[] p = pair.Split(',');
-                int source = int.Parse(p[0]);
-                int dest = int.Parse(p[1]);
-
-                if (_id == source)
-                {
-                    _neighbourNodes.Add(dest);
-                }
-
-                _networkGraph[source, dest] = true;
+                _neighbourNodes.Add(int.Parse(n));                
             }
         }
 

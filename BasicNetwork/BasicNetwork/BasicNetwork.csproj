@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NeighbourNode.cs" />
-    <Compile Include="NetworkGraph.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Program.cs" />
@@ -54,12 +53,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ID.txt" />
-    <Content Include="network.txt" />
+    <Content Include="NB.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy $(ProjectDir)ID.txt $(TargetDir)ID.txt
-copy $(ProjectDir)network.txt $(TargetDir)network.txt
+copy $(ProjectDir)NB.txt $(TargetDir)NB.txt
 </PreBuildEvent>
   </PropertyGroup>
 </Project>
