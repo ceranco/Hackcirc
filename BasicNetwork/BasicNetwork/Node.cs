@@ -202,7 +202,8 @@ namespace BasicNetwork
 
                     // Add Packet for Acknowledge List Only 
                     // if you are an Original Source
-                    if (p.NodeOriginalSource == _id)
+                    // and this is not an acknowledgment packet
+                    if ((p.NodeOriginalSource == _id) && (p.IsAcknoledgment == 0))
                     {
                         _packetListForAcknoledge.Add(p);
                     }
