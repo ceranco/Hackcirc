@@ -23,7 +23,7 @@ namespace BasicNetwork
             index += sizeof(int);
             NodeSource = BitConverter.ToInt32(data, index);
             index += sizeof(int);
-            NodeOriginalSourceCount = BitConverter.ToInt32(data, index);
+            NodeOriginalSourceCount = BitConverter.ToInt64(data, index);
             index += sizeof(int);
             NodeDestination = BitConverter.ToInt32(data, index);
             index += sizeof(int);

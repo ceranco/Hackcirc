@@ -30,39 +30,39 @@ namespace BasicNetwork
             _routingTable = table;
         }
 
-        public int GetNextNode(int src, int dst, List<int> prevNodes = null)
-        {
-            if (prevNodes == null)
-            {
-                prevNodes = new List<int>();
-            }
+        //public int GetNextNode(int src, int dst, List<int> prevNodes = null)
+        //{
+        //    if (prevNodes == null)
+        //    {
+        //        prevNodes = new List<int>();
+        //    }
 
-            int nextDst;
-            for (int i = 0; i < _maxNodes; i++)
-            {
-                if (_routingTable[dst][i] == true)
-                {
-                    nextDst = i;
+        //    int nextDst;
+        //    for (int i = 0; i < _maxNodes; i++)
+        //    {
+        //        if (_routingTable[dst][i] == true)
+        //        {
+        //            nextDst = i;
 
-                    if (src == nextDst)
-                    {
-                        return dst;
-                    }
+        //            if (src == nextDst)
+        //            {
+        //                return dst;
+        //            }
 
-                    if (!prevNodes.Contains(nextDst))
-                    {
-                        prevNodes.Add(dst);
-                        int nextNode = GetNextNode(src, nextDst, prevNodes);
-                        if (nextNode != -1)
-                        {
-                            return nextNode;
-                        }
-                    }
-                }
-            }
+        //            if (!prevNodes.Contains(nextDst))
+        //            {
+        //                prevNodes.Add(dst);
+        //                int nextNode = GetNextNode(src, nextDst, prevNodes);
+        //                if (nextNode != -1)
+        //                {
+        //                    return nextNode;
+        //                }
+        //            }
+        //        }
+        //    }
 
-            return -1;
-        }
+        //    return -1;
+        //}
 
         public bool this[int i, int j]
         {
