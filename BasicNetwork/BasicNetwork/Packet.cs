@@ -15,7 +15,8 @@ namespace BasicNetwork
         public int NodeDestination { get; set; } // -1 Means All
         public int IsAcknoledgment { get; set; }
         public Int64 AcknoledgmentCount { get; set; }
-        public int Info { get; set; }       
+        public int InfoSize { get; set; }
+        public byte[] Info { get; set; }       
         #endregion
 
         public Packet(byte[] data)
@@ -33,7 +34,9 @@ namespace BasicNetwork
             index += sizeof(int);
             AcknoledgmentCount = BitConverter.ToInt64(data, index);
             index += sizeof(Int64);
-            Info = BitConverter.ToInt32(data, index);
+            InfoSize = BitConverter.ToInt32(data, index);
+            index += sizeof(int);
+            Array.Copy(data, index, Info, 0, InfoSize);
         }
 
         public Packet()
@@ -42,11 +45,21 @@ namespace BasicNetwork
 
         public void PrintDebugInfo()
         {
-            Console.WriteLine("NodeOrigSrc {0}, NodeSrc {1}, NodeOrigSrcCnt {2}, NodeDest {3}, IsAckt {4}, AckCnt {5}, Info {6}",
+            Console.WriteLine("NodeOrigSrc {0}, NodeSrc {1}, NodeOrigSrcCnt {2}, NodeDest {3}, IsAckt {4}, AckCnt {5}",
                 NodeOriginalSource, NodeSource, 
                 NodeOriginalSourceCount, NodeDestination,
-                IsAcknoledgment, AcknoledgmentCount,
-                Info);
+                IsAcknoledgment, AcknoledgmentCount);
+
+            int[] result = Array.ConvertAll(Info, Convert.ToInt32);
+
+            using (System.IO.StreamWriter file =
+                new System.IO.StreamWriter(@"output.txt"))
+            {
+                foreach (int num in result)
+                {
+                    file.WriteLine(num);                    
+                }
+            }
         }
 
         public void PrintBroadcastInfo()
@@ -83,8 +96,8 @@ namespace BasicNetwork
 
             result = result.Concat(BitConverter.GetBytes(IsAcknoledgment));
             result = result.Concat(BitConverter.GetBytes(AcknoledgmentCount));
-
-            result = result.Concat(BitConverter.GetBytes(Info));
+            result = result.Concat(BitConverter.GetBytes(InfoSize));
+            result = result.Concat(Info);
 
             byte[] array = result.ToArray();
 

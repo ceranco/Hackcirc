@@ -265,7 +265,7 @@ namespace BasicNetwork
             }
         }
 
-        public void Foo(int info)
+        public void Foo(byte [] info)
         {
             if (_id != 1) return;
             
@@ -276,7 +276,7 @@ namespace BasicNetwork
                 Info = info,
                 NodeSource = _id,
                 NodeOriginalSource = _id,
-                NodeDestination = 3,
+                NodeDestination = 4,
                 NodeOriginalSourceCount = timeCount
             };
 
