@@ -8,7 +8,7 @@ namespace BasicNetwork
 {
     class NetworkGraph
     {
-        public bool[][] _routingTable;
+        bool[][] _routingTable;
         readonly int _maxNodes;
 
         public NetworkGraph(int maxNodes)
@@ -23,6 +23,11 @@ namespace BasicNetwork
                     _routingTable[i][j] = false;
                 }
             }
+        }
+
+        public void Set(bool[][] table)
+        {
+            _routingTable = table;
         }
 
         public int GetNextNode(int src, int dst, List<int> prevNodes = null)
@@ -57,6 +62,12 @@ namespace BasicNetwork
             }
 
             return -1;
+        }
+
+        public bool this[int i, int j]
+        {
+            get { return _routingTable[i][j]; }
+            set { _routingTable[i][j] = value; }
         }
     }
 }
