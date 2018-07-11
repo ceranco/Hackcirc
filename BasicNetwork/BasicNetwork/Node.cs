@@ -13,7 +13,7 @@ namespace BasicNetwork
         #region Constants
         private static int kBroadcastPort = 2000;
         //private static int kNumNodes = 5;
-        private static int kTimeoutInSeconds = 30;
+        private static int kTimeoutInSeconds = 5;
         #endregion
 
         #region Members
