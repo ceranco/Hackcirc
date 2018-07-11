@@ -74,6 +74,7 @@ StyleCopReport.xml
 *.scc
 ID.txt
 id.txt
+nb.txt
 
 # Chutzpah Test files
 _Chutzpah*
