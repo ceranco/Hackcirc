@@ -38,7 +38,10 @@
             <Viewbox Grid.Row="0" Grid.Column="1">
                 <TextBlock TextWrapping="Wrap" Text="Neighbours:" />
             </Viewbox>
-            <local:ConnectivityGraphic Grid.Row="1" Grid.Column="1" />
+            <Border Grid.Row="1" Margin="10 0 20 0" Grid.Column="1" 
+                    BorderBrush="LightGray" BorderThickness="1">
+                <local:ConnectivityGraphic />
+            </Border>
         </Grid>
         <Grid Grid.Row="3" Margin="0 0 0 10">
             <Grid.RowDefinitions>
@@ -59,6 +62,38 @@
                         VerticalAlignment="Center" 
                         FontSize="20" Padding="50, 20"/>
             </Grid>
+            <Border Grid.Row="2" Margin="20 10 20 0"
+                    BorderBrush="LightGray" BorderThickness="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <RadioButton HorizontalAlignment="Center" 
+                             VerticalAlignment="Center" 
+                             Grid.Column="0" Content="All"
+                                 IsChecked="True"/>
+                    <RadioButton HorizontalAlignment="Center" 
+                             VerticalAlignment="Center"
+                             Grid.Column="1" Content="0"/>
+                    <RadioButton HorizontalAlignment="Center" 
+                             VerticalAlignment="Center"
+                             Grid.Column="2" Content="1"/>
+                    <RadioButton HorizontalAlignment="Center" 
+                             VerticalAlignment="Center"
+                             Grid.Column="3" Content="2"/>
+                    <RadioButton HorizontalAlignment="Center" 
+                             VerticalAlignment="Center"
+                             Grid.Column="4" Content="3"/>
+                    <RadioButton HorizontalAlignment="Center" 
+                             VerticalAlignment="Center"
+                             Grid.Column="5" Content="4"/>
+                </Grid>
+            </Border>
         </Grid>
     </Grid>
 </Window>
