@@ -83,18 +83,23 @@ namespace BasicNetwork
             {
                 NodeOriginalSource = receivedPacket.NodeOriginalSource,
                 NodeSource = _id,
-                NodeDestination = receivedPacket.NodeDestination,
-                Info = receivedPacket.Info,
+                NodeDestination = receivedPacket.NodeDestination,                
+                InfoSize = receivedPacket.InfoSize,
                 NodeOriginalSourceCount = receivedPacket.NodeOriginalSourceCount,
                 IsAcknoledgment = receivedPacket.IsAcknoledgment,
                 AcknoledgmentCount = receivedPacket.AcknoledgmentCount
             };
+
+            newPacket.Info = new byte[newPacket.InfoSize];
+            Buffer.BlockCopy(receivedPacket.Info, 0, newPacket.Info, 0, newPacket.InfoSize);
 
             return newPacket;
         }
 
         public void Receive()
         {
+            int startIndex = 0;
+
             while (true)
             {
                 byte[] bytes = _udpReceive.Receive(ref _receiveEndPoint);
@@ -133,7 +138,8 @@ namespace BasicNetwork
                 else if (_id == receivedPacket.NodeDestination)
                 {
                     // My Message
-                    receivedPacket.PrintDebugInfo();
+                    receivedPacket.PrintDebugInfo(startIndex);
+                    startIndex += receivedPacket.InfoSize;
 
                     // This Package is not Acknoledgment
                     if (receivedPacket.IsAcknoledgment != 1)
@@ -147,8 +153,10 @@ namespace BasicNetwork
                             NodeDestination = receivedPacket.NodeOriginalSource,
                             IsAcknoledgment = 1,
                             NodeOriginalSourceCount = timeCount,
-                            AcknoledgmentCount = receivedPacket.NodeOriginalSourceCount
+                            AcknoledgmentCount = receivedPacket.NodeOriginalSourceCount,
+                            InfoSize = 4
                         };
+                        newPacket.Info = new byte[newPacket.InfoSize];
 
                         // Enqueue Packet for Send
                         _packetQueueToSend.Enqueue(newPacket);
@@ -265,7 +273,7 @@ namespace BasicNetwork
             }
         }
 
-        public void Foo(int info)
+        public void Foo(byte [] info, int infoSize)
         {
             if (_id != 1) return;
             
@@ -274,6 +282,7 @@ namespace BasicNetwork
             Packet p = new Packet()
             {
                 Info = info,
+                InfoSize = infoSize,
                 NodeSource = _id,
                 NodeOriginalSource = _id,
                 NodeDestination = 3,
