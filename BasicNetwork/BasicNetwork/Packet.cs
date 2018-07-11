@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,29 +45,34 @@ namespace BasicNetwork
         {
         }
 
-        public void PrintDebugInfo()
+        public void PrintDebugInfo(int startIndex)
         {
             Console.WriteLine("NodeOrigSrc {0}, NodeSrc {1}, NodeOrigSrcCnt {2}, NodeDest {3}, IsAckt {4}, AckCnt {5}",
                 NodeOriginalSource, NodeSource, 
                 NodeOriginalSourceCount, NodeDestination,
                 IsAcknoledgment, AcknoledgmentCount);
 
-            //int[] result = Array.ConvertAll(Info, Convert.ToInt32);
+            //int[] result = new int[Info.Length / 4];
+            //for (int i = 0; i < Info.Length; i += 4)
+            //{
+            //    result[i / 4] = BitConverter.ToInt32(Info, i);
+            //}
 
-            int[] result = new int[Info.Length / 4];
+            //using (System.IO.StreamWriter file =
+            //    new System.IO.StreamWriter(@"output.txt"))
+            //{
+            //    foreach (int num in result)
+            //    {
+            //        file.WriteLine(num);                    
+            //    }
+            //}
 
-            for (int i = 0; i < Info.Length; i += 4)
+            //MemoryStream ms = new MemoryStream(Info);
+            using (FileStream file = 
+                new FileStream("picture.bmp", 
+                    FileMode.Open, System.IO.FileAccess.Write))
             {
-                result[i / 4] = BitConverter.ToInt32(Info, i);
-            }
-
-            using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter(@"output.txt"))
-            {
-                foreach (int num in result)
-                {
-                    file.WriteLine(num);                    
-                }
+                file.Write(Info, startIndex, Info.Length);
             }
         }
 

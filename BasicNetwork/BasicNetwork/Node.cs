@@ -98,6 +98,8 @@ namespace BasicNetwork
 
         public void Receive()
         {
+            int startIndex = 0;
+
             while (true)
             {
                 byte[] bytes = _udpReceive.Receive(ref _receiveEndPoint);
@@ -136,7 +138,8 @@ namespace BasicNetwork
                 else if (_id == receivedPacket.NodeDestination)
                 {
                     // My Message
-                    receivedPacket.PrintDebugInfo();
+                    receivedPacket.PrintDebugInfo(startIndex);
+                    startIndex += receivedPacket.InfoSize;
 
                     // This Package is not Acknoledgment
                     if (receivedPacket.IsAcknoledgment != 1)
