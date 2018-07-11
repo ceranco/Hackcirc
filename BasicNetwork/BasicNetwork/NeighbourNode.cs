@@ -8,7 +8,7 @@ namespace BasicNetwork
 {
     class NeighbourNode
     {
-        public string ID { get; }
-        public List<string> neighbours = new List<string>();
+        public int ID { get; }
+        public List<NeighbourNode> neighbours = new List<NeighbourNode>();
     }
 }

@@ -8,156 +8,55 @@ namespace BasicNetwork
 {
     class NetworkGraph
     {
-        private int[][] edges;
-        private IDictionary<string, int> map;
-        private LinkedList<int> freeCells;
-        private int freeIndex;
+        public bool[][] _routingTable;
+        readonly int _maxNodes;
 
-        public NetworkGraph() { }
-
-        public void Generate(Node root, List<NeighbourNode> neighbours)
+        public NetworkGraph(int maxNodes)
         {
-            var connections = new Dictionary<string, string>();
-
-        }
-
-
-        public virtual int Size
-        {
-            get
+            _maxNodes = maxNodes;
+            _routingTable = new bool[maxNodes][];
+            for (int i = 0; i < maxNodes; i++)
             {
-                return map.Count;
-            }
-        }
-
-        public string[] getEdges()
-        {
-            string[] router = new string[map.Count];
-            int i = 0;
-            foreach (string @var in map.Keys)
-            {
-                router[i] = @var;
-                i++;
-            }
-            return router;
-        }
-
-        public virtual bool addEdge(string router)
-        {
-            int index;
-            if (map.ContainsKey(router))
-            {
-                return false;
-            }
-            if (freeCells.Count == 0)
-            {
-                index = freeIndex;
-                map[router] = index;
-                freeIndex++;
-            }
-            else
-            {
-                index = freeCells.First.Value;
-                freeCells.RemoveFirst();
-                map[router] = index;
-            }
-            return true;
-        }
-
-        public virtual bool removeEdge(string router)
-        {
-            int index;
-            if (map.ContainsKey(router))
-            {
-                map.TryGetValue(router, out index);
-                map.Remove(router);
-                freeCells.AddLast(index);
-                for (int i = 0; i < edges[index].Length; i++)
+                _routingTable[i] = new bool[maxNodes];
+                for (int j = 0; j < maxNodes; j++)
                 {
-                    edges[index][i] = 0;
-                    edges[i][index] = 0;
+                    _routingTable[i][j] = false;
                 }
-                return true;
-            }
-            else
-            {
-                return false;
             }
         }
 
-        public virtual bool setLink(string source, string dest, int weight)
+        public int GetNextNode(int src, int dst, List<int> prevNodes = null)
         {
-            if (map.ContainsKey(source) && map.ContainsKey(dest))
+            if (prevNodes == null)
             {
-                edges[map[source]][map[dest]] = weight;
-                edges[map[dest]][map[source]] = weight;
-                return true;
+                prevNodes = new List<int>();
             }
-            else
-            {
-                return false;
-            }
-        }
 
-        public virtual bool removeLink(string source, string dest)
-        {
-            if (map.ContainsKey(source) && map.ContainsKey(dest))
+            int nextDst;
+            for (int i = 0; i < _maxNodes; i++)
             {
-                edges[map[source]][map[dest]] = 0;
-                edges[map[dest]][map[source]] = 0;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public virtual string[] getNeighbors(string router)
-        {
-            int[] numbers;
-            string[] neighbors;
-            if (map.ContainsKey(router))
-            {
-                int count = 0;
-                int index;
-                map.TryGetValue(router, out index);
-                for (int i = 0; i < edges.Length; i++)
+                if (_routingTable[dst][i] == true)
                 {
-                    if (edges[index][i] > 0)
+                    nextDst = i;
+                    
+                    if (src == nextDst)
                     {
-                        count++;
+                        return dst;
                     }
-                }
-                numbers = new int[count];
-                neighbors = new string[count];
-                count = 0;
-                for (int i = 0; i < edges.Length; i++)
-                {
-                    if (edges[index][i] > 0)
+
+                    if (!prevNodes.Contains(nextDst))
                     {
-                        numbers[count++] = i;
-                    }
-                }
-                count = 0;
-                foreach (string id in map.Keys)
-                {
-                    for (int i = 0; i < numbers.Length; i++)
-                    {
-                        if (numbers[i] == map[id])
+                        prevNodes.Add(dst);
+                        int nextNode = GetNextNode(src, nextDst, prevNodes);
+                        if (nextNode != -1)
                         {
-                            neighbors[count++] = id;
-                            break;
+                            return nextNode;
                         }
                     }
                 }
-                return neighbors;
             }
-            else
-            {
-                return null;
-            }
+
+            return -1;
         }
     }
-}
 }
