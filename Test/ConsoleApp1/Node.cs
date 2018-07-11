@@ -164,6 +164,9 @@ namespace Test
                      NodeNextHop = networkGraph.GetNextNode(myNodeID, 4),
                       NodeSourceCount = myNodeIDCount
             };
+
+            // Send Packet
+            SendBroadcast(p);
         }
     }
 }

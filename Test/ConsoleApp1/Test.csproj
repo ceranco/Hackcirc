@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="NetworkGraph.cs" />
     <Compile Include="Packet.cs" />
-    <Compile Include="Message.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
