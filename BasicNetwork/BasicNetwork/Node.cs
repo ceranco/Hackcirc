@@ -83,12 +83,15 @@ namespace BasicNetwork
             {
                 NodeOriginalSource = receivedPacket.NodeOriginalSource,
                 NodeSource = _id,
-                NodeDestination = receivedPacket.NodeDestination,
-                Info = receivedPacket.Info,
+                NodeDestination = receivedPacket.NodeDestination,                
+                InfoSize = receivedPacket.InfoSize,
                 NodeOriginalSourceCount = receivedPacket.NodeOriginalSourceCount,
                 IsAcknoledgment = receivedPacket.IsAcknoledgment,
                 AcknoledgmentCount = receivedPacket.AcknoledgmentCount
             };
+
+            newPacket.Info = new byte[newPacket.InfoSize];
+            Buffer.BlockCopy(receivedPacket.Info, 0, newPacket.Info, 0, newPacket.InfoSize);
 
             return newPacket;
         }
