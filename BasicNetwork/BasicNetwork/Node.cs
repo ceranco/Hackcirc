@@ -196,7 +196,7 @@ namespace BasicNetwork
                 Info = info,
                 NodeSource = _id,
                 NodeOriginalSource = _id,
-                NodeDestination = 3,
+                NodeDestination = 4,
                 NodeOriginalSourceCount = _idCount
             };
 
