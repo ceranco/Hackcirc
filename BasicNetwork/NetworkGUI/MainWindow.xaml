@@ -34,7 +34,8 @@
             <Viewbox Grid.Row="0" Grid.Column="0">
                 <TextBlock TextWrapping="Wrap" Text="Packet Sniffing:" />
             </Viewbox>
-            <RichTextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" />
+            <RichTextBox Grid.Row="1" Grid.Column="0" 
+                         IsReadOnly="True" x:Name="PacketTextBox" />
             <Viewbox Grid.Row="0" Grid.Column="1">
                 <TextBlock TextWrapping="Wrap" Text="Neighbours:" />
             </Viewbox>
@@ -56,7 +57,7 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0" x:Name="InputBox" 
-                         Margin="20 0 0 0"/>
+                         Margin="20 0 0 0" FontSize="20"/>
                 <Button Grid.Column="1" Content="Send" 
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center" 
