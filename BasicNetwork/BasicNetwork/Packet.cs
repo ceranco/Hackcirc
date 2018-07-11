@@ -45,7 +45,7 @@ namespace BasicNetwork
         {
         }
 
-        public void PrintDebugInfo(int startIndex)
+        public void PrintDebugInfo()
         {
             Console.WriteLine("NodeOrigSrc {0}, NodeSrc {1}, NodeOrigSrcCnt {2}, NodeDest {3}, IsAckt {4}, AckCnt {5}",
                 NodeOriginalSource, NodeSource, 
@@ -65,15 +65,7 @@ namespace BasicNetwork
             //    {
             //        file.WriteLine(num);                    
             //    }
-            //}
-
-            //MemoryStream ms = new MemoryStream(Info);
-            using (FileStream file = 
-                new FileStream("picture.bmp", 
-                    FileMode.Open, System.IO.FileAccess.Write))
-            {
-                file.Write(Info, startIndex, Info.Length);
-            }
+            //}            
         }
 
         public void PrintBroadcastInfo()

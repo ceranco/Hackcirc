@@ -14,7 +14,7 @@ namespace BasicNetwork
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Program Version 2.13\n");
+            Console.WriteLine("Program Version 2.14\n");
 
             Node node = new Node();
 
@@ -54,7 +54,7 @@ namespace BasicNetwork
                 node.Foo(result, length);
                 Thread.Sleep(1000);
             }
-            Console.WriteLine("Finished Sending The Picture\n");
+            Console.WriteLine("\nFinished Sending The Picture\n");
             while(true)
             {
                 Thread.Sleep(10000);

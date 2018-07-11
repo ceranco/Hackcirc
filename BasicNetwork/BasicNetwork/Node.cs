@@ -99,6 +99,7 @@ namespace BasicNetwork
         public void Receive()
         {
             int startIndex = 0;
+            byte[] pictureStream = new byte[5662];
 
             while (true)
             {
@@ -137,13 +138,22 @@ namespace BasicNetwork
                 }                
                 else if (_id == receivedPacket.NodeDestination)
                 {
-                    // My Message
-                    receivedPacket.PrintDebugInfo(startIndex);
-                    startIndex += receivedPacket.InfoSize;
+                    // My Message                   
 
                     // This Package is not Acknoledgment
                     if (receivedPacket.IsAcknoledgment != 1)
                     {
+                        Buffer.BlockCopy(receivedPacket.Info, 0,
+                            pictureStream, startIndex, receivedPacket.InfoSize);
+                        //receivedPacket.PrintDebugInfo(pictureStream);
+                        using (FileStream file =
+                            new FileStream("picture.bmp",
+                                FileMode.Open, System.IO.FileAccess.Write))
+                        {
+                            file.Write(pictureStream, 0, pictureStream.Length);
+                        }
+                        startIndex += receivedPacket.InfoSize;
+
                         // Prepare Acknowledge Packet
                         Int64 timeCount = Utility.GetTimeCount();
                         Packet newPacket = new Packet()
@@ -285,7 +295,7 @@ namespace BasicNetwork
                 InfoSize = infoSize,
                 NodeSource = _id,
                 NodeOriginalSource = _id,
-                NodeDestination = 3,
+                NodeDestination = 0,
                 NodeOriginalSourceCount = timeCount
             };
 
