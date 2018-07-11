@@ -36,6 +36,7 @@ namespace BasicNetwork
             index += sizeof(Int64);
             InfoSize = BitConverter.ToInt32(data, index);
             index += sizeof(int);
+            Info = new byte[InfoSize];
             Array.Copy(data, index, Info, 0, InfoSize);
         }
 
