@@ -14,7 +14,7 @@ namespace BasicNetwork
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Program Version 2.15\n");
+            Console.WriteLine("Program Version 2.16\n");
 
             Node node = new Node();
 
@@ -40,7 +40,7 @@ namespace BasicNetwork
             bmp.Dispose();
             ms.Close();
 
-            int size = 500;
+            int size = 200;
             int index = 0;
             while (index <= bmpBytes.Length)
             {

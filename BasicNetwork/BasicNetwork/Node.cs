@@ -100,6 +100,13 @@ namespace BasicNetwork
         {
             int startIndex = 0;
             byte[] pictureStream = new byte[5662];
+            for (int i = 0; i < 5662; i ++)
+            {
+                pictureStream[i] = 0xFF;
+            }
+
+
+            //pictureStream.
 
             while (true)
             {
