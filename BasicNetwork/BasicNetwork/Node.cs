@@ -12,7 +12,7 @@ namespace BasicNetwork
     {
         #region Constants
         private static int kBroadcastPort = 2000;
-        private static int kNumNodes = 5;
+        //private static int kNumNodes = 5;
         #endregion
 
         #region Members
