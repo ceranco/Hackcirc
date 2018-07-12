@@ -21,8 +21,26 @@ namespace NetworkGUI
         public MainWindow()
         {
             InitializeComponent();
-
             UpdateGraph(MyNode.NeighbourNodes);
+
+            MyNode.MessageReceived += MessageReceived;
+            MyNode.MessageRelayed += MessageRelayed;
+            MyNode.MessageAcknowledged += MessageAcknowledged;
+        }
+
+        private void MessageReceived(object sender, Node.Node.MessageArgs e)
+        {
+            InsertLabel("Message Received", Brushes.LightGreen);
+        }
+
+        private void MessageRelayed(object sender, Node.Node.MessageArgs e)
+        {
+            InsertLabel("Message Relayed", Brushes.LightGoldenrodYellow);
+        }
+
+        private void MessageAcknowledged(object sender, Node.Node.MessageArgs e)
+        {
+            InsertLabel("Message Acknowledged", Brushes.LightSkyBlue);
         }
 
         /// <summary>
@@ -74,7 +92,7 @@ namespace NetworkGUI
         /// </summary>
         /// <param name="backgroundColor">The color to set the background to.</param>
         /// <param name="message">The message to set in the label.</param>
-        private void InsertLabel(Brush backgroundColor, string message)
+        private void InsertLabel(string message, Brush backgroundColor)
         {
             PacketPanel.Children.Insert(0, new Label()
             {
