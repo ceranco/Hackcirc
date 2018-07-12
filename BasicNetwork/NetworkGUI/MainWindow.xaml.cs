@@ -48,6 +48,10 @@ namespace NetworkGUI
                 {
                     message = String.Format("Sending Acknowledgment: {0} -> {1}", e.Source, e.Destination);
                 }
+                else if (e.Destination == -1)
+                {
+                    message = "Sending Broadcast Message";
+                }
                 else
                 {
                     message = String.Format("Message Sent: {0} -> {1}", e.Source, e.Destination);
