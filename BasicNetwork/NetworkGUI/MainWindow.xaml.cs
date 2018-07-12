@@ -13,7 +13,7 @@ namespace NetworkGUI
     public partial class MainWindow : Window
     {
         public Node.Node MyNode { get; } = new Node.Node();
-        
+
         public string MissionStatus { get; set; } = "Active";
 
         public int MessageDestination { get; set; } = -1;
@@ -30,17 +30,26 @@ namespace NetworkGUI
 
         private void MessageReceived(object sender, Node.Node.MessageArgs e)
         {
-            InsertLabel("Message Received", Brushes.LightGreen);
+            Dispatcher.Invoke(() =>
+            {
+                InsertLabel("Message Received", Brushes.LightGreen);
+            });
         }
 
         private void MessageRelayed(object sender, Node.Node.MessageArgs e)
         {
-            InsertLabel("Message Relayed", Brushes.LightGoldenrodYellow);
+            Dispatcher.Invoke(() =>
+            {
+                InsertLabel("Message Relayed", Brushes.LightGoldenrodYellow);
+            });
         }
 
         private void MessageAcknowledged(object sender, Node.Node.MessageArgs e)
         {
-            InsertLabel("Message Acknowledged", Brushes.LightSkyBlue);
+            Dispatcher.Invoke(() =>
+            {
+                InsertLabel("Message Acknowledged", Brushes.LightSkyBlue);
+            });
         }
 
         /// <summary>
@@ -120,15 +129,15 @@ namespace NetworkGUI
                 {
                     return 0;
                 }
-                else if(Dest1.IsChecked == true)
+                else if (Dest1.IsChecked == true)
                 {
                     return 1;
                 }
-                else if(Dest2.IsChecked == true)
+                else if (Dest2.IsChecked == true)
                 {
                     return 2;
                 }
-                else if(Dest3.IsChecked == true)
+                else if (Dest3.IsChecked == true)
                 {
                     return 3;
                 }
