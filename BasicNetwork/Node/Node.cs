@@ -144,7 +144,7 @@ namespace Node
                 {
                     // Prepare Packet
                     Packet newPacket = PreparePacket(receivedPacket);
-                    OnBroadcastMessageReceived(new MessageArgs(newPacket.NodeOriginalSource, newPacket.NodeDestination, newPacket.Info));
+                    OnBroadcastMessageReceived(new MessageArgs(newPacket.NodeOriginalSource, newPacket.NodeDestination, newPacket.Info, newPacket.IsAcknoledgment == 1 ));
 
                     // Enqueue Packet for Send
                     _packetQueueToSend.Enqueue(newPacket);
@@ -158,7 +158,7 @@ namespace Node
                     // This Package is not Acknowledgment
                     if (receivedPacket.IsAcknoledgment != 1)
                     {
-                        OnMessageReceived(new MessageArgs(receivedPacket.NodeOriginalSource, receivedPacket.NodeDestination, receivedPacket.Info));
+                        OnMessageReceived(new MessageArgs(receivedPacket.NodeOriginalSource, receivedPacket.NodeDestination, receivedPacket.Info, receivedPacket.IsAcknoledgment == 1));
 
                         #region Prepare Acknowledge Packet
 
@@ -184,7 +184,7 @@ namespace Node
                     }
                     else // Acknowledge
                     {
-                        OnMessageAcknowledged(new MessageArgs(receivedPacket.NodeOriginalSource, receivedPacket.NodeDestination, receivedPacket.Info));
+                        OnMessageAcknowledged(new MessageArgs(receivedPacket.NodeOriginalSource, receivedPacket.NodeDestination, receivedPacket.Info, receivedPacket.IsAcknoledgment == 1));
 
 
                         // Remove from List
@@ -209,7 +209,7 @@ namespace Node
                 }
                 else // Send to Next Node Hop
                 {
-                    OnMessageRelayed(new MessageArgs(receivedPacket.NodeOriginalSource, receivedPacket.NodeDestination, receivedPacket.Info));
+                    OnMessageRelayed(new MessageArgs(receivedPacket.NodeOriginalSource, receivedPacket.NodeDestination, receivedPacket.Info, receivedPacket.IsAcknoledgment == 1));
 
 
                     // Prepare Packet
@@ -231,7 +231,7 @@ namespace Node
                 if (_packetQueueToSend.TryDequeue(out p))
                 {
                     // Send Packet
-                    OnMessageSent(new MessageArgs(p.NodeSource, p.NodeDestination, p.Info));
+                    OnMessageSent(new MessageArgs(p.NodeSource, p.NodeDestination, p.Info, p.IsAcknoledgment == 1));
                     SendBroadcast(p);
 
                     // Add Packet for Acknowledge List Only 
@@ -263,7 +263,7 @@ namespace Node
                         // Add myself to seenMessages
                         _previousSeenPackets[Id] = currentTimeCount;
 
-                        OnMessageSent(new MessageArgs(pret.NodeSource, pret.NodeDestination, pret.Info));
+                        OnMessageSent(new MessageArgs(pret.NodeSource, pret.NodeDestination, pret.Info, pret.IsAcknoledgment == 1));
                         SendBroadcast(pret);
                     }
                 }
@@ -334,13 +334,15 @@ namespace Node
         {
             public int Source { get; private set; }
             public int Destination { get; private set; }
+            public bool IsAcknowledgment { get; private set; }
             public byte[] Data { get; private set; }
 
-            public MessageArgs(int source, int destination, byte[] data)
+            public MessageArgs(int source, int destination, byte[] data, bool isAcknowledgment)
             {
                 Source = source;
                 Destination = destination;
                 Data = data;
+                IsAcknowledgment = isAcknowledgment;
             }
         }
 

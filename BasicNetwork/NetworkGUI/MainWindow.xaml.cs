@@ -43,7 +43,16 @@ namespace NetworkGUI
         {
             Dispatcher.Invoke(() =>
             {
-                InsertLabel(String.Format("Message Sent: {0} -> {1}", e.Source, e.Destination), Brushes.NavajoWhite);
+                string message;
+                if (e.IsAcknowledgment)
+                {
+                    message = String.Format("Sending Acknowledgment: {0} -> {1}", e.Source, e.Destination);
+                }
+                else
+                {
+                    message = String.Format("Message Sent: {0} -> {1}", e.Source, e.Destination);
+                }
+                InsertLabel(message, Brushes.NavajoWhite);
             });
         }
 
