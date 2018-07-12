@@ -22,6 +22,7 @@ namespace NetworkGUI
         {
             InitializeComponent();
             UpdateGraph(MyNode.NeighbourNodes);
+            DisableRadioButton();
 
             MyNode.MessageReceived += MessageReceived;
             MyNode.MessageRelayed += MessageRelayed;
@@ -29,6 +30,36 @@ namespace NetworkGUI
             MyNode.MessageSent += MessageSent;
             MyNode.BroadcastMessageReceived += BroadcastMessageReceived;
         }
+
+        private void DisableRadioButton()
+        {
+            RadioButton GetMyRadioButton()
+            {
+                switch (MyNode.Id)
+                {
+                    case 0:
+                        return Dest0;
+                    case 1:
+                        return Dest1;
+                    case 2:
+                        return Dest2;
+                    case 3:
+                        return Dest3;
+                    case 4:
+                        return Dest4;
+                    case 5:
+                        return Dest5;
+                    default:
+                        return null;
+                }
+            }
+            var myButton = GetMyRadioButton();
+            if (myButton != null)
+            {
+                myButton.IsEnabled = false;
+            }
+        }
+
 
         private void BroadcastMessageReceived(object sender, Node.Node.MessageArgs e)
         {
