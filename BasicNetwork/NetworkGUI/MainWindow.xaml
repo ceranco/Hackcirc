@@ -7,22 +7,42 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="651" Width="1000"
         Closed="Window_Closed"
+        WindowState="Maximized"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="2.5*"/>
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="11*"/>
             <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Label x:Name="IDLabel" Content="Node ID: "></Label>
-            <Label Content="{Binding MyNode.Id}" />
-        </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Label Content="Mission Status: "/>
-            <Label Content="{Binding MissionStatus}" />
-        </StackPanel>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Viewbox Grid.Row="0" Grid.Column="0">
+                    <Label x:Name="IDLabel" FontFamily="Times New Roman" Content="Node ID: "></Label>
+                </Viewbox>
+                <Viewbox Grid.Row="0" Grid.Column="0">
+                    <Grid>
+                        <Ellipse Fill="LightSalmon" Width="60" Height="60" />
+                        <Label FontFamily="Calibri" Foreground="White" 
+                               Content="{Binding MyNode.Id}" 
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="40"/>
+                    </Grid>
+
+                </Viewbox>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Label Content="Mission Status: "/>
+                <Label Content="{Binding MissionStatus}" />
+            </StackPanel>
+        </Grid>
+        <Separator Grid.Row="1" />
         <Grid Grid.Row="2" Margin="20 20 0 0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
