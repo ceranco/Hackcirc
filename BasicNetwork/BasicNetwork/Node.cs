@@ -38,14 +38,20 @@ namespace BasicNetwork
 
         Dictionary<int, Int64> _previousSeenPackets
             = new Dictionary<int, Int64>();
+
+        private bool _saveImage = false;
+        private int _imageSize = 0;
         #endregion
 
         #region Properties
         public int Id { get => _id; set => _id = value; }
         #endregion
 
-        public Node()
+        public Node(int imgSize, bool saveImg)
         {
+            _imageSize = imgSize;
+            _saveImage = saveImg;
+
             _broadcast.Add(0, new IPEndPoint(IPAddress.Parse("1.1.0.29"), kBroadcastPort));
             _broadcast.Add(1, new IPEndPoint(IPAddress.Parse("1.1.0.28"), kBroadcastPort));
             _broadcast.Add(2, new IPEndPoint(IPAddress.Parse("1.1.0.35"), kBroadcastPort));
@@ -103,14 +109,16 @@ namespace BasicNetwork
         public void Receive()
         {
             int startIndex = 0;
-            byte[] pictureStream = new byte[5662];
-            for (int i = 0; i < 5662; i ++)
+            byte[] pictureStream = null;
+
+            if (_saveImage)
             {
-                pictureStream[i] = 0xFF;
+                pictureStream = new byte[_imageSize];
+                for (int i = 0; i < _imageSize; i++)
+                {
+                    pictureStream[i] = 0xFF;
+                }
             }
-
-
-            //pictureStream.
 
             while (true)
             {
@@ -154,16 +162,19 @@ namespace BasicNetwork
                     // This Package is not Acknoledgment
                     if (receivedPacket.IsAcknoledgment != 1)
                     {
-                        Buffer.BlockCopy(receivedPacket.Info, 0,
-                            pictureStream, startIndex, receivedPacket.InfoSize);
-                        //receivedPacket.PrintDebugInfo(pictureStream);
-                        using (FileStream file =
-                            new FileStream("picture.bmp",
-                                FileMode.Open, System.IO.FileAccess.Write))
+                        if (_saveImage)
                         {
-                            file.Write(pictureStream, 0, pictureStream.Length);
+                            Buffer.BlockCopy(receivedPacket.Info, 0,
+                                pictureStream, startIndex, receivedPacket.InfoSize);
+                            //receivedPacket.PrintDebugInfo(pictureStream);
+                            using (FileStream file =
+                                new FileStream("picture.bmp",
+                                    FileMode.Open, System.IO.FileAccess.Write))
+                            {
+                                file.Write(pictureStream, 0, pictureStream.Length);
+                            }
+                            startIndex += receivedPacket.InfoSize;
                         }
-                        startIndex += receivedPacket.InfoSize;
 
                         #region Prepare Acknowledge Packet
                         Int64 timeCount = Utility.GetTimeCount();
@@ -233,7 +244,10 @@ namespace BasicNetwork
                     // Add Packet for Acknowledge List Only 
                     // if you are an Original Source
                     // and this is not an acknowledgment packet
-                    if ((p.NodeOriginalSource == _id) && (p.IsAcknoledgment == 0))
+                    // No acknowledgment for Broadcast
+                    if ((p.NodeOriginalSource == _id) && 
+                        (p.IsAcknoledgment == 0) &&
+                        (p.NodeDestination != -1))
                     {
                         _packetListForAcknoledge.Add(p);
                     }

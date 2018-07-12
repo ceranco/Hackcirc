@@ -14,12 +14,18 @@ namespace BasicNetwork
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Program Version 2.17\n");
+            Console.WriteLine("Program Version 2.18\n");
 
-            Node node = new Node();
+            bool imageExists = false;
+            if (File.Exists("BW.bmp")) imageExists = true;
 
-            if (node.Id == 1)
+            byte[] bmpBytes = new byte[100];
+
+            Node node = null;
+
+            if (imageExists)
             {
+                //Bitmap bmp = new Bitmap("BW.bmp");
                 Bitmap bmp = new Bitmap("BW.bmp");
 
                 MemoryStream ms = new MemoryStream();
@@ -27,10 +33,19 @@ namespace BasicNetwork
                 bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
 
                 // read to end
-                byte[] bmpBytes = ms.GetBuffer();
+                bmpBytes = ms.GetBuffer();
                 bmp.Dispose();
                 ms.Close();
 
+                node = new Node(bmpBytes.Length, true);
+            }
+            else
+            {
+                node = new Node(0, false);
+            }
+
+            if (node.Id == 1)
+            {                
                 int size = 200;
                 int index = 0;
                 while (index <= bmpBytes.Length)
