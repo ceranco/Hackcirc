@@ -35,7 +35,7 @@ namespace NetworkGUI
             Dispatcher.Invoke(() =>
             {
                 var message = Encoding.Default.GetString(e.Data);
-                InsertLabel(String.Format("Broadcast Message Received From: {0} -> *: {1}", e.Source, message), Brushes.Orange);
+                InsertLabel(String.Format("Broadcast Message Received From {0}: {1}", e.Source, message), Brushes.Orange);
             });
         }
 
