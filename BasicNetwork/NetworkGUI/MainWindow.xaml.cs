@@ -33,7 +33,7 @@ namespace NetworkGUI
             Dispatcher.Invoke(() =>
             {
                 var message = Encoding.Default.GetString(e.Data);
-                InsertLabel(String.Format("Message Received: {0} -> {1}", e.Source, e.Destination), Brushes.LightGreen);
+                InsertLabel(String.Format("Message Received: {0} -> {1}: '{2}'", e.Source, e.Destination, Encoding.Default.GetString(e.Data)), Brushes.LightGreen);
             });
         }
 
