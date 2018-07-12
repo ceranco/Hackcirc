@@ -14,9 +14,9 @@ namespace BasicNetwork
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Program Version 2.18\n");
-            //string pictureName = "BW.bmp";
-            string pictureName = "team2.bmp";
+            Console.WriteLine("Program Version 2.19\n");
+            string pictureName = "BW.bmp";
+            //string pictureName = "team2.bmp";
 
             bool imageExists = false;
             if (File.Exists(pictureName)) imageExists = true;
@@ -47,7 +47,7 @@ namespace BasicNetwork
 
             if (node.Id == 1)
             {                
-                int size = 200;
+                int size = 100;
                 int index = 0;
                 Console.WriteLine("\nTransferring Image Started\n");
                 while (index <= bmpBytes.Length)
@@ -62,7 +62,7 @@ namespace BasicNetwork
 
                     node.SendInfo(result, length, 0);
 
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
                 Console.WriteLine("\nTransferring Image Completed\n");
             }
