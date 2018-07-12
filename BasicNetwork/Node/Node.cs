@@ -108,13 +108,6 @@ namespace Node
 
         private void Receive()
         {
-            int startIndex = 0;
-            byte[] pictureStream = new byte[5662];
-            for (int i = 0; i < 5662; i++)
-            {
-                pictureStream[i] = 0xFF;
-            }
-
             while (_active)
             {
                 // Make sure that we call the blocking Receive function 
@@ -164,18 +157,10 @@ namespace Node
                     // This Package is not Acknowledgment
                     if (receivedPacket.IsAcknoledgment != 1)
                     {
-                        Buffer.BlockCopy(receivedPacket.Info, 0,
-                            pictureStream, startIndex, receivedPacket.InfoSize);
-                        //receivedPacket.PrintDebugInfo(pictureStream);
-                        using (FileStream file =
-                            new FileStream("picture.bmp",
-                                FileMode.Open, System.IO.FileAccess.Write))
-                        {
-                            file.Write(pictureStream, 0, pictureStream.Length);
-                        }
-                        startIndex += receivedPacket.InfoSize;
+                        OnMessageReceived(new MessageArgs(receivedPacket.Info));
 
                         #region Prepare Acknowledge Packet
+
                         Int64 timeCount = Utility.GetTimeCount();
                         Packet newPacket = new Packet()
                         {
@@ -193,10 +178,14 @@ namespace Node
                         _packetQueueToSend.Enqueue(newPacket);
 
                         newPacket.PrintAcknoledgmentInfo();
+
                         #endregion
                     }
                     else // Acknowledge
                     {
+                        OnMessageAcknowledged(new MessageArgs(receivedPacket.Info));
+
+
                         // Remove from List
                         lock (mutex)
                         {
@@ -219,6 +208,9 @@ namespace Node
                 }
                 else // Send to Next Node Hop
                 {
+                    OnMessageRelayed(new MessageArgs(receivedPacket.Info));
+
+
                     // Prepare Packet
                     Packet newPacket = PreparePacket(receivedPacket);
 
@@ -334,5 +326,36 @@ namespace Node
         {
             _active = false;
         }
+
+        #region Events
+
+        public class MessageArgs : EventArgs
+        {
+            public byte[] Data { get; private set; }
+
+            public MessageArgs(byte[] data)
+            {
+                Data = data;
+            }
+        }
+
+        public event EventHandler<MessageArgs> MessageReceived;
+        protected virtual void OnMessageReceived(MessageArgs e)
+        {
+            MessageReceived?.Invoke(this, e);
+        }
+
+        public event EventHandler<MessageArgs> MessageRelayed;
+        protected virtual void OnMessageRelayed(MessageArgs e)
+        {
+            MessageRelayed?.Invoke(this, e);
+        }
+
+        public event EventHandler<MessageArgs> MessageAcknowledged;
+        protected virtual void OnMessageAcknowledged(MessageArgs e)
+        {
+            MessageAcknowledged?.Invoke(this, e);
+        }
+        #endregion
     }
 }
