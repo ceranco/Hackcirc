@@ -22,6 +22,7 @@ namespace NetworkGUI
         {
             InitializeComponent();
             UpdateGraph(MyNode.NeighbourNodes);
+            DisableRadioButton();
 
             MyNode.MessageReceived += MessageReceived;
             MyNode.MessageRelayed += MessageRelayed;
@@ -30,12 +31,42 @@ namespace NetworkGUI
             MyNode.BroadcastMessageReceived += BroadcastMessageReceived;
         }
 
+        private void DisableRadioButton()
+        {
+            RadioButton GetMyRadioButton()
+            {
+                switch (MyNode.Id)
+                {
+                    case 0:
+                        return Dest0;
+                    case 1:
+                        return Dest1;
+                    case 2:
+                        return Dest2;
+                    case 3:
+                        return Dest3;
+                    case 4:
+                        return Dest4;
+                    case 5:
+                        return Dest5;
+                    default:
+                        return null;
+                }
+            }
+            var myButton = GetMyRadioButton();
+            if (myButton != null)
+            {
+                myButton.IsEnabled = false;
+            }
+        }
+
+
         private void BroadcastMessageReceived(object sender, Node.Node.MessageArgs e)
         {
             Dispatcher.Invoke(() =>
             {
                 var message = Encoding.Default.GetString(e.Data);
-                InsertLabel(String.Format("Broadcast Message Received From {0}: {1}", e.Source, message), Brushes.Orange);
+                InsertLabel(String.Format("Broadcast Message Received From {0}: '{1}'", e.Source, message), Brushes.Orange);
             });
         }
 
@@ -47,6 +78,10 @@ namespace NetworkGUI
                 if (e.IsAcknowledgment)
                 {
                     message = String.Format("Sending Acknowledgment: {0} -> {1}", e.Source, e.Destination);
+                }
+                else if (e.Destination == -1)
+                {
+                    message = "Sending Broadcast Message";
                 }
                 else
                 {
