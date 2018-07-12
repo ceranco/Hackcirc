@@ -112,10 +112,10 @@ namespace Node
             {
                 // Make sure that we call the blocking Receive function 
                 // only if there is data waiting
-                if (_udpReceive.Available  == 0)
+                if (_udpReceive.Available == 0)
                 {
                     continue;
-                
+
                 }
                 byte[] bytes = _udpReceive.Receive(ref _receiveEndPoint);
                 Packet receivedPacket = new Packet(bytes);
@@ -144,6 +144,7 @@ namespace Node
                 {
                     // Prepare Packet
                     Packet newPacket = PreparePacket(receivedPacket);
+                    OnBroadcastMessageReceived(new MessageArgs(newPacket.NodeOriginalSource, newPacket.NodeDestination, newPacket.Info));
 
                     // Enqueue Packet for Send
                     _packetQueueToSend.Enqueue(newPacket);
@@ -230,6 +231,7 @@ namespace Node
                 if (_packetQueueToSend.TryDequeue(out p))
                 {
                     // Send Packet
+                    OnMessageSent(new MessageArgs(p.NodeSource, p.NodeDestination, p.Info));
                     SendBroadcast(p);
 
                     // Add Packet for Acknowledge List Only 
@@ -261,6 +263,7 @@ namespace Node
                         // Add myself to seenMessages
                         _previousSeenPackets[Id] = currentTimeCount;
 
+                        OnMessageSent(new MessageArgs(pret.NodeSource, pret.NodeDestination, pret.Info));
                         SendBroadcast(pret);
                     }
                 }
@@ -347,6 +350,12 @@ namespace Node
             MessageReceived?.Invoke(this, e);
         }
 
+        public event EventHandler<MessageArgs> BroadcastMessageReceived;
+        protected virtual void OnBroadcastMessageReceived(MessageArgs e)
+        {
+            BroadcastMessageReceived?.Invoke(this, e);
+        }
+
         public event EventHandler<MessageArgs> MessageRelayed;
         protected virtual void OnMessageRelayed(MessageArgs e)
         {
@@ -357,6 +366,12 @@ namespace Node
         protected virtual void OnMessageAcknowledged(MessageArgs e)
         {
             MessageAcknowledged?.Invoke(this, e);
+        }
+
+        public event EventHandler<MessageArgs> MessageSent;
+        protected virtual void OnMessageSent(MessageArgs e)
+        {
+            MessageSent?.Invoke(this, e);
         }
         #endregion
     }

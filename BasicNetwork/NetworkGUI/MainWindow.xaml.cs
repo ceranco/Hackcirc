@@ -26,6 +26,25 @@ namespace NetworkGUI
             MyNode.MessageReceived += MessageReceived;
             MyNode.MessageRelayed += MessageRelayed;
             MyNode.MessageAcknowledged += MessageAcknowledged;
+            MyNode.MessageSent += MessageSent;
+            MyNode.BroadcastMessageReceived += BroadcastMessageReceived;
+        }
+
+        private void BroadcastMessageReceived(object sender, Node.Node.MessageArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                var message = Encoding.Default.GetString(e.Data);
+                InsertLabel(String.Format("Broadcast Message Received From: {0} -> *: {1}", e.Source, message), Brushes.Orange);
+            });
+        }
+
+        private void MessageSent(object sender, Node.Node.MessageArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                InsertLabel(String.Format("Message Sent: {0} -> {1}", e.Source, e.Destination), Brushes.NavajoWhite);
+            });
         }
 
         private void MessageReceived(object sender, Node.Node.MessageArgs e)
@@ -33,7 +52,7 @@ namespace NetworkGUI
             Dispatcher.Invoke(() =>
             {
                 var message = Encoding.Default.GetString(e.Data);
-                InsertLabel(String.Format("Message Received: {0} -> {1}: '{2}'", e.Source, e.Destination, Encoding.Default.GetString(e.Data)), Brushes.LightGreen);
+                InsertLabel(String.Format("Message Received: {0} -> {1}: '{2}'", e.Source, e.Destination, message), Brushes.LightGreen);
             });
         }
 
