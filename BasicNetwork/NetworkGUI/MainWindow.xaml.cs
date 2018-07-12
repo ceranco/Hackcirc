@@ -32,7 +32,8 @@ namespace NetworkGUI
         {
             Dispatcher.Invoke(() =>
             {
-                InsertLabel("Message Received", Brushes.LightGreen);
+                var message = Encoding.Default.GetString(e.Data);
+                InsertLabel(String.Format("Message Received: {0} -> {1}", e.Source, e.Destination), Brushes.LightGreen);
             });
         }
 
@@ -40,7 +41,7 @@ namespace NetworkGUI
         {
             Dispatcher.Invoke(() =>
             {
-                InsertLabel("Message Relayed", Brushes.LightGoldenrodYellow);
+                InsertLabel(String.Format("Message Relayed: {0} -> {1} -> {2}", e.Source, MyNode.Id, e.Destination), Brushes.LightGoldenrodYellow);
             });
         }
 
@@ -48,7 +49,7 @@ namespace NetworkGUI
         {
             Dispatcher.Invoke(() =>
             {
-                InsertLabel("Message Acknowledged", Brushes.LightSkyBlue);
+                InsertLabel(String.Format("Message Acknowledged: {0} -> {1} -> {0}", e.Destination, e.Source), Brushes.LightSkyBlue);
             });
         }
 

@@ -157,7 +157,7 @@ namespace Node
                     // This Package is not Acknowledgment
                     if (receivedPacket.IsAcknoledgment != 1)
                     {
-                        OnMessageReceived(new MessageArgs(receivedPacket.Info));
+                        OnMessageReceived(new MessageArgs(receivedPacket.NodeOriginalSource, receivedPacket.NodeDestination, receivedPacket.Info));
 
                         #region Prepare Acknowledge Packet
 
@@ -183,7 +183,7 @@ namespace Node
                     }
                     else // Acknowledge
                     {
-                        OnMessageAcknowledged(new MessageArgs(receivedPacket.Info));
+                        OnMessageAcknowledged(new MessageArgs(receivedPacket.NodeOriginalSource, receivedPacket.NodeDestination, receivedPacket.Info));
 
 
                         // Remove from List
@@ -208,7 +208,7 @@ namespace Node
                 }
                 else // Send to Next Node Hop
                 {
-                    OnMessageRelayed(new MessageArgs(receivedPacket.Info));
+                    OnMessageRelayed(new MessageArgs(receivedPacket.NodeOriginalSource, receivedPacket.NodeDestination, receivedPacket.Info));
 
 
                     // Prepare Packet
@@ -329,10 +329,14 @@ namespace Node
 
         public class MessageArgs : EventArgs
         {
+            public int Source { get; private set; }
+            public int Destination { get; private set; }
             public byte[] Data { get; private set; }
 
-            public MessageArgs(byte[] data)
+            public MessageArgs(int source, int destination, byte[] data)
             {
+                Source = source;
+                Destination = destination;
                 Data = data;
             }
         }
