@@ -15,9 +15,11 @@ namespace BasicNetwork
         static void Main(string[] args)
         {
             Console.WriteLine("Program Version 2.18\n");
+            //string pictureName = "BW.bmp";
+            string pictureName = "team2.bmp";
 
             bool imageExists = false;
-            if (File.Exists("BW.bmp")) imageExists = true;
+            if (File.Exists(pictureName)) imageExists = true;
 
             byte[] bmpBytes = new byte[100];
 
@@ -25,8 +27,7 @@ namespace BasicNetwork
 
             if (imageExists)
             {
-                //Bitmap bmp = new Bitmap("BW.bmp");
-                Bitmap bmp = new Bitmap("BW.bmp");
+                Bitmap bmp = new Bitmap(pictureName);
 
                 MemoryStream ms = new MemoryStream();
                 // Save to memory using the BMP format
@@ -48,6 +49,7 @@ namespace BasicNetwork
             {                
                 int size = 200;
                 int index = 0;
+                Console.WriteLine("\nTransferring Image Started\n");
                 while (index <= bmpBytes.Length)
                 {
                     byte[] result = new byte[size];
@@ -62,7 +64,7 @@ namespace BasicNetwork
 
                     Thread.Sleep(1000);
                 }
-                Console.WriteLine("\nFinished Sending The Picture\n");
+                Console.WriteLine("\nTransferring Image Completed\n");
             }
 
             while(true)

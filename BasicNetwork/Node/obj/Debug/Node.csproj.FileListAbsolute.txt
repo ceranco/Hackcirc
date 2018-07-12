@@ -4,3 +4,9 @@ C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\Node\obj\Debug\Node.csproj
 C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\Node\obj\Debug\Node.csproj.CoreCompileInputs.cache
 C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\Node\obj\Debug\Node.dll
 C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\Node\obj\Debug\Node.pdb
+C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\Node\bin\Debug\Node.dll
+C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\Node\bin\Debug\Node.pdb
+C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\Node\obj\Debug\Node.csprojAssemblyReference.cache
+C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\Node\obj\Debug\Node.csproj.CoreCompileInputs.cache
+C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\Node\obj\Debug\Node.dll
+C:\Users\Danit\Desktop\Hackcirc\BasicNetwork\Node\obj\Debug\Node.pdb
