@@ -299,8 +299,6 @@ namespace Node
 
         public void SendInfo(byte[] info, int infoLength, int nodeDest)
         {
-            if (Id != 1) return;
-
             Int64 timeCount = Utility.GetTimeCount();
 
             Packet p = new Packet()
