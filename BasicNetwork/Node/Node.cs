@@ -237,7 +237,10 @@ namespace Node
                     // Add Packet for Acknowledge List Only 
                     // if you are an Original Source
                     // and this is not an acknowledgment packet
-                    if ((p.NodeOriginalSource == Id) && (p.IsAcknoledgment == 0))
+                    // No acknowledgment for Broadcast
+                    if ((p.NodeOriginalSource == Id) && 
+                        (p.IsAcknoledgment == 0) && 
+                        (p.NodeDestination != -1))
                     {
                         _packetListForAcknoledge.Add(p);
                     }
