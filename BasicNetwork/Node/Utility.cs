@@ -2,7 +2,7 @@
 
 namespace Node
 {
-    public static class Utility
+    internal static class Utility
     {
         public static Int64 GetTimeCount()
         {

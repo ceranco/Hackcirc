@@ -21,6 +21,8 @@ namespace Node
 
         #region Members
 
+        bool _active = true;
+
         // UDP clients for sending and receiving messages
         UdpClient _udpSend = new UdpClient() { EnableBroadcast = true };
         UdpClient _udpReceive = new UdpClient(kBroadcastPort) { EnableBroadcast = true };
@@ -32,19 +34,20 @@ namespace Node
         // Threads for receiving and sending
         Thread _receiveThread = null;
         Thread _mainThread = null;
-        int _id = 0;
-        List<int> _neighbourNodes = new List<int>();
+
+        public List<int> NeighbourNodes { get; private set; } = new List<int>();
         ConcurrentQueue<Packet> _packetQueueToSend = new ConcurrentQueue<Packet>();
 
         List<Packet> _packetListForAcknoledge = new List<Packet>();
         object mutex = new object();
 
-        Dictionary<int, Int64> _previousSeenPackets
-            = new Dictionary<int, Int64>();
+        Dictionary<int, Int64> _previousSeenPackets = new Dictionary<int, Int64>();
         #endregion
 
         #region Properties
-        public int Id { get => _id; set => _id = value; }
+
+        public int Id { get; private set; }
+
         #endregion
 
         public Node()
@@ -78,7 +81,7 @@ namespace Node
         {
             for (int i = 0; i < _broadcast.Count; i++)
             {
-                if (_id == i) continue;
+                if (Id == i) continue;
                 byte[] data = p.GetBytes();
                 _udpSend.Send(data, data.Length, _broadcast[i]);
             }
@@ -89,7 +92,7 @@ namespace Node
             Packet newPacket = new Packet()
             {
                 NodeOriginalSource = receivedPacket.NodeOriginalSource,
-                NodeSource = _id,
+                NodeSource = Id,
                 NodeDestination = receivedPacket.NodeDestination,
                 InfoSize = receivedPacket.InfoSize,
                 NodeOriginalSourceCount = receivedPacket.NodeOriginalSourceCount,
@@ -112,17 +115,21 @@ namespace Node
                 pictureStream[i] = 0xFF;
             }
 
-
-            //pictureStream.
-
-            while (true)
+            while (_active)
             {
+                // Make sure that we call the blocking Receive function 
+                // only if there is data waiting
+                if (_udpReceive.Available  == 0)
+                {
+                    continue;
+                
+                }
                 byte[] bytes = _udpReceive.Receive(ref _receiveEndPoint);
                 Packet receivedPacket = new Packet(bytes);
 
                 // Do not Process Packets if they are not coming from 
                 // Physical Neighbours
-                if (!_neighbourNodes.Contains(receivedPacket.NodeSource))
+                if (!NeighbourNodes.Contains(receivedPacket.NodeSource))
                 {
                     continue;
                 }
@@ -150,11 +157,11 @@ namespace Node
 
                     newPacket.PrintBroadcastInfo();
                 }
-                else if (_id == receivedPacket.NodeDestination)
+                else if (Id == receivedPacket.NodeDestination)
                 {
                     // My Message                   
 
-                    // This Package is not Acknoledgment
+                    // This Package is not Acknowledgment
                     if (receivedPacket.IsAcknoledgment != 1)
                     {
                         Buffer.BlockCopy(receivedPacket.Info, 0,
@@ -172,8 +179,8 @@ namespace Node
                         Int64 timeCount = Utility.GetTimeCount();
                         Packet newPacket = new Packet()
                         {
-                            NodeOriginalSource = _id,
-                            NodeSource = _id,
+                            NodeOriginalSource = Id,
+                            NodeSource = Id,
                             NodeDestination = receivedPacket.NodeOriginalSource,
                             IsAcknoledgment = 1,
                             NodeOriginalSourceCount = timeCount,
@@ -225,7 +232,7 @@ namespace Node
 
         public void MainLoop()
         {
-            while (true)
+            while (_active)
             {
                 Packet p;
                 if (_packetQueueToSend.TryDequeue(out p))
@@ -236,7 +243,7 @@ namespace Node
                     // Add Packet for Acknowledge List Only 
                     // if you are an Original Source
                     // and this is not an acknowledgment packet
-                    if ((p.NodeOriginalSource == _id) && (p.IsAcknoledgment == 0))
+                    if ((p.NodeOriginalSource == Id) && (p.IsAcknoledgment == 0))
                     {
                         _packetListForAcknoledge.Add(p);
                     }
@@ -260,7 +267,7 @@ namespace Node
                         pret.NodeOriginalSourceCount = currentTimeCount;
 
                         // Add myself to seenMessages
-                        _previousSeenPackets[_id] = currentTimeCount;
+                        _previousSeenPackets[Id] = currentTimeCount;
 
                         SendBroadcast(pret);
                     }
@@ -273,7 +280,7 @@ namespace Node
         public void PrintNeighbours()
         {
             Console.Write("My Neighbours are : ");
-            foreach (int n in _neighbourNodes)
+            foreach (int n in NeighbourNodes)
             {
                 Console.Write(n.ToString() + " ");
             }
@@ -284,8 +291,8 @@ namespace Node
         public void GetMyID()
         {
             var idFile = File.ReadAllLines("ID.txt");
-            _id = int.Parse(idFile[0]);
-            Console.WriteLine("My ID is: " + _id.ToString());
+            Id = int.Parse(idFile[0]);
+            Console.WriteLine("My ID is: " + Id.ToString());
             Console.WriteLine("");
         }
 
@@ -294,21 +301,21 @@ namespace Node
             var neighbours = File.ReadAllLines("NB.txt");
             foreach (string n in neighbours)
             {
-                _neighbourNodes.Add(int.Parse(n));
+                NeighbourNodes.Add(int.Parse(n));
             }
         }
 
         public void SendInfo(byte[] info, int infoLength, int nodeDest)
         {
-            if (_id != 1) return;
+            if (Id != 1) return;
 
             Int64 timeCount = Utility.GetTimeCount();
 
             Packet p = new Packet()
             {
                 InfoSize = infoLength,
-                NodeSource = _id,
-                NodeOriginalSource = _id,
+                NodeSource = Id,
+                NodeOriginalSource = Id,
                 NodeDestination = nodeDest,
                 NodeOriginalSourceCount = timeCount
             };
@@ -317,10 +324,15 @@ namespace Node
 
 
             // Add myself to seenMessages
-            _previousSeenPackets[_id] = timeCount;
+            _previousSeenPackets[Id] = timeCount;
 
             // Enqueue Packet for Send
             _packetQueueToSend.Enqueue(p);
+        }
+
+        public void Close()
+        {
+            _active = false;
         }
     }
 }

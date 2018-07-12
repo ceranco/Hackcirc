@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace NetworkGUI
 {
@@ -20,19 +12,17 @@ namespace NetworkGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string ID { get; set; } = "1";
+        public Node.Node MyNode { get; } = new Node.Node();
+        
         public string MissionStatus { get; set; } = "Active";
+
+        public int MessageDestination { get; set; } = -1;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            UpdateGraph(new List<int>() { 0, 2 });
-
-            for (int i = 0; i < 30; i++)
-            {
-                InsertLabel((i % 2) == 0 ? Brushes.LightGreen : Brushes.LightSkyBlue, String.Format("This is message {0}!", i));
-            }
+            UpdateGraph(MyNode.NeighbourNodes);
         }
 
         /// <summary>
@@ -69,7 +59,7 @@ namespace NetworkGUI
                 }
 
             }
-            update("E" + ID, Brushes.Salmon);
+            update("E" + MyNode.Id, Brushes.Salmon);
 
             foreach (var id in neighbours)
             {
@@ -93,6 +83,50 @@ namespace NetworkGUI
                 Margin = new Thickness(1),
                 FontSize = 17
             });
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            MyNode.Close();
+        }
+
+        private void Send_Click(object sender, RoutedEventArgs e)
+        {
+            int GetDestination()
+            {
+                if (DestAll.IsChecked == true)
+                {
+                    return -1;
+                }
+                else if (Dest0.IsChecked == true)
+                {
+                    return 0;
+                }
+                else if(Dest1.IsChecked == true)
+                {
+                    return 1;
+                }
+                else if(Dest2.IsChecked == true)
+                {
+                    return 2;
+                }
+                else if(Dest3.IsChecked == true)
+                {
+                    return 3;
+                }
+                else if (Dest4.IsChecked == true)
+                {
+                    return 4;
+                }
+                else if (Dest5.IsChecked == true)
+                {
+                    return 5;
+                }
+                return -1;
+            }
+
+            var bytes = Encoding.ASCII.GetBytes(InputBox.Text);
+            MyNode.SendInfo(bytes, bytes.Length, GetDestination());
         }
     }
 }

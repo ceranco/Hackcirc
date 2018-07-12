@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:NetworkGUI"
         mc:Ignorable="d"
         Title="MainWindow" Height="651" Width="1000"
+        Closed="Window_Closed"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
@@ -16,7 +17,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Label x:Name="IDLabel" Content="Node ID: "></Label>
-            <Label Content="{Binding ID}" />
+            <Label Content="{Binding MyNode.Id}" />
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Label Content="Mission Status: "/>
@@ -70,7 +71,8 @@
                 <Button Grid.Column="1" Content="Send" 
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center" 
-                        FontSize="20" Padding="50, 20"/>
+                        FontSize="20" Padding="50, 20"
+                        Click="Send_Click"/>
             </Grid>
             <Border Grid.Row="2" Margin="20 10 20 0"
                     BorderBrush="LightGray" BorderThickness="1">
@@ -82,26 +84,37 @@
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     <RadioButton HorizontalAlignment="Center" 
-                             VerticalAlignment="Center" 
-                             Grid.Column="0" Content="All"
+                                 VerticalAlignment="Center" 
+                                 Grid.Column="0" Content="All"
+                                 x:Name="DestAll"
                                  IsChecked="True"/>
                     <RadioButton HorizontalAlignment="Center" 
-                             VerticalAlignment="Center"
-                             Grid.Column="1" Content="0"/>
+                                 VerticalAlignment="Center"
+                                 x:Name="Dest0"
+                                 Grid.Column="1" Content="0"/>
                     <RadioButton HorizontalAlignment="Center" 
-                             VerticalAlignment="Center"
-                             Grid.Column="2" Content="1"/>
+                                 VerticalAlignment="Center"
+                                 x:Name="Dest1"
+                                 Grid.Column="2" Content="1"/>
                     <RadioButton HorizontalAlignment="Center" 
-                             VerticalAlignment="Center"
-                             Grid.Column="3" Content="2"/>
+                                 VerticalAlignment="Center"
+                                 x:Name="Dest2"
+                                 Grid.Column="3" Content="2"/>
                     <RadioButton HorizontalAlignment="Center" 
-                             VerticalAlignment="Center"
-                             Grid.Column="4" Content="3"/>
+                                 VerticalAlignment="Center"
+                                 x:Name="Dest3"
+                                 Grid.Column="4" Content="3"/>
                     <RadioButton HorizontalAlignment="Center" 
-                             VerticalAlignment="Center"
-                             Grid.Column="5" Content="4"/>
+                                 VerticalAlignment="Center"
+                                 x:Name="Dest4"
+                                 Grid.Column="5" Content="4"/>
+                    <RadioButton HorizontalAlignment="Center" 
+                                 VerticalAlignment="Center"
+                                 x:Name="Dest5"
+                                 Grid.Column="6" Content="5"/>
                 </Grid>
             </Border>
         </Grid>

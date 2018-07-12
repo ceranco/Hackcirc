@@ -16,3 +16,6 @@ C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\NetworkGUI\obj\Debug\Netwo
 C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\NetworkGUI\obj\Debug\NetworkGUI.csproj.CoreCompileInputs.cache
 C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\NetworkGUI\obj\Debug\NetworkGUI.exe
 C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\NetworkGUI\obj\Debug\NetworkGUI.pdb
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\NetworkGUI\bin\Debug\Node.dll
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\NetworkGUI\bin\Debug\Node.pdb
+C:\Users\ceran\Desktop\Hackcirc\Hackcirc\BasicNetwork\NetworkGUI\obj\Debug\NetworkGUI.csproj.CopyComplete
